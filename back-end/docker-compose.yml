@@ -380,6 +380,35 @@ services:
       mongo-db:
         condition: service_healthy
 
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    environment:
+      spring.cloud.config.uri: http://config-service:8888
+      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
+      spring.kafka.bootstrap-servers: kafka1:9092,kafka2:9093,kafka3:9094
+      spring.data.mongodb.uri: mongodb://root:1234@mongo-db:27017/notifications
+    networks:
+      - chunsun-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      gateway-service:
+        condition: service_healthy
+      kafka1:
+        condition: service_healthy
+      kafka2:
+        condition: service_healthy
+      kafka3:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
+
+
   ############################
   # Kafka & Zookeeper 설정 추가
   ############################
