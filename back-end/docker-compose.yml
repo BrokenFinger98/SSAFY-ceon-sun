@@ -18,7 +18,7 @@ services:
     networks:
       - chunsun-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -71,7 +71,7 @@ services:
     networks:
       - chunsun-network
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
+      test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -398,10 +398,6 @@ services:
       discovery-service:
         condition: service_healthy
       gateway-service:
-        condition: service_healthy
-      kafka1:
-        condition: service_healthy
-      kafka2:
         condition: service_healthy
       kafka3:
         condition: service_healthy
