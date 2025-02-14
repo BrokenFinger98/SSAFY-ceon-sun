@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
 
   kafka:
@@ -24,7 +24,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
-      max-poll-records: 100
+      max-poll-records: 1000
       enable-auto-commit: false
       properties:
         isolation.level: read_committed

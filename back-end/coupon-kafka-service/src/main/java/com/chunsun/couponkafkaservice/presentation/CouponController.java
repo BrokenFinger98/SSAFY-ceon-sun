@@ -13,9 +13,7 @@ import com.chunsun.couponkafkaservice.application.service.CouponService;
 import com.chunsun.couponkafkaservice.common.resolver.UserId;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/coupons")
 @RestController

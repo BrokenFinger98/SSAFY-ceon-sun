@@ -1,6 +1,6 @@
 package com.chunsun.couponkafkaservice.common.exception.handler;
 
-import static com.chunsun.couponkafkaservice.common.error.CouponErrorCodes.INVALID_REQUEST;
+import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_REQUEST;
 
 import java.time.LocalDateTime;
 

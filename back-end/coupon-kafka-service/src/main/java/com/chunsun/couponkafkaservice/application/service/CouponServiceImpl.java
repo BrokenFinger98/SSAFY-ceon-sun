@@ -3,7 +3,7 @@ package com.chunsun.couponkafkaservice.application.service;
 import static com.chunsun.couponkafkaservice.application.convert.CouponConverter.toCoupon;
 import static com.chunsun.couponkafkaservice.application.convert.CouponConverter.toCreateCouponServiceResponse;
 import static com.chunsun.couponkafkaservice.application.dto.ServiceDto.*;
-import static com.chunsun.couponkafkaservice.common.error.CouponErrorCodes.INVALID_COUPON_DELETE_REQUEST;
+import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_COUPON_DELETE_REQUEST;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

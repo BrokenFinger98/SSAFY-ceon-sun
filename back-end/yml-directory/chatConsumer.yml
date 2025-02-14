@@ -5,10 +5,6 @@ spring:
   application:
     name: chat-consumer
 
-  data:
-    mongodb:
-      uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo-db:27017/authdb?authSource=authdb
-
   kafka:
     consumer:
       bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
@@ -20,3 +16,8 @@ spring:
         spring.json.trusted.packages: "com.chunsun.chatservice.web.dto"
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
         spring.json.value.default.type: com.chunsun.chatconsumer.web.dto.MessageDto
+        fetch.min.bytes: 50000  # 최소 50KB 이상의 데이터가 쌓여야 가져옴
+        fetch.max.wait.ms: 5000 # 5초 이내에 데이터가 쌓이지 않으면 가져옴
+      enable-auto-commit: false  # 🚀 반드시 false 설정 (수동 커밋을 위해)
+      auto-offset-reset: earliest  # or latest (필요에 따라 조정)
+      max-poll-records: 500  # 🚀 한 번에 가져올 메시지 개수 조정

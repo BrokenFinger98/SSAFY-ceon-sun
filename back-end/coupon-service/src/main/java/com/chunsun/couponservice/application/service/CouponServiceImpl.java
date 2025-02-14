@@ -8,19 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.chunsun.couponservice.application.client.CouponKafkaClient;
 import com.chunsun.couponservice.application.client.NotificationClient;
-import com.chunsun.couponservice.application.dto.NotificationRequestDto;
 import com.chunsun.couponservice.common.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CouponServiceImpl implements CouponService {
 
 	private final CouponKafkaClient couponKafkaClient;
-	private final NotificationClient notificationClient;
+	// private final NotificationClient notificationClient;
 	private final RedisService redisService;
 	private final KafkaProducerService kafkaProducerService;
 

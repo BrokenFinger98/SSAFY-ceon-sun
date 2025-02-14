@@ -2,14 +2,17 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -216,10 +219,20 @@ public class MemberServiceImpl implements MemberService {
 		}
 
 		Pageable pageable = PageRequest.of(page, size);
+
+		if (searchTargetRole == Role.STUDENT) {
+			// Student 테이블의 updatedAt 기준 내림차순
+			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "student.updatedAt"));
+		} else {
+			// Teacher 테이블의 updatedAt 기준 내림차순
+			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "teacher.updatedAt"));
+		}
+
 		Page<Member> resultPage = memberRepository.findAll(spec, pageable);
 
 		List<MemberDto.MemberListItem> dtoList = resultPage.getContent().stream().map(member -> {
 			Long memberId = member.getId();
+			String profileImage = member.getProfileImage();
 			String nickname = member.getNickname();
 			Integer memberAge = Period.between(member.getBirthdate(), LocalDate.now()).getYears();
 			Gender memberGender = member.getGender();
@@ -227,9 +240,50 @@ public class MemberServiceImpl implements MemberService {
 			List<Category> memberCategories = memberCategoryRepository.findByMember(member).stream()
 				.map(MemberCategory::getCategory)
 				.collect(Collectors.toList());
-			return new MemberDto.MemberListItem(memberId, nickname, memberAge, memberGender, memberCategories);
+			return new MemberDto.MemberListItem(memberId, profileImage, nickname, memberAge, memberGender, memberCategories);
 		}).collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, resultPage.getTotalElements());
+	}
+
+	@Override
+	public List<MemberDto.TeacherListItem> getTeachersRank(List<MemberDto.TeacherTupleDto> teachersRank) {
+
+		List<Long> ids = teachersRank.stream()
+			.map(dto -> Long.parseLong(dto.value()))
+			.toList();
+
+		List<Member> teachers = memberRepository.findAllById(ids);
+
+		Map<Long, Member> teacherMap = teachers.stream()
+			.collect(Collectors.toMap(Member::getId, t -> t));
+
+		List<MemberDto.TeacherListItem> rankedTeachers = new ArrayList<>();
+
+		for (MemberDto.TeacherTupleDto rankInfo : teachersRank) {
+			Long teacherId = Long.parseLong(rankInfo.value());
+			Member teacher = teacherMap.get(teacherId);
+
+			if (teacher != null) {
+				List<Category> memberCategories = memberCategoryRepository.findByMember(teacher).stream()
+					.map(MemberCategory::getCategory)
+					.collect(Collectors.toList());
+
+				Integer age = Period.between(teacher.getBirthdate(), LocalDate.now()).getYears();
+
+				MemberDto.TeacherListItem item = new MemberDto.TeacherListItem(
+					teacher.getId(),
+					teacher.getProfileImage(),
+					teacher.getNickname(),
+					age,
+					teacher.getGender(),
+					memberCategories,
+					rankInfo.score()
+				);
+				rankedTeachers.add(item);
+			}
+		}
+
+		return rankedTeachers;
 	}
 }

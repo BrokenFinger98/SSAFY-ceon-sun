@@ -1,7 +1,9 @@
 package com.chunsun.rankservice.application.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -233,16 +235,17 @@ public class RankingServiceImpl implements RankingService {
 		});
 	}
 
-	// 상위 n명 조회
+	// 선생님 랭크 조회
 	@Override
-	public Set<ZSetOperations.TypedTuple<String>> getTopRankedTeachers(int count) {
+	public List<ZSetOperations.TypedTuple<String>> getTeachersRank() {
 		try {
-			Set<ZSetOperations.TypedTuple<String>> result = zSet.reverseRangeWithScores(SCORE_KEY, 0, count - 1);
-			return (result != null) ? result : Set.of();
+			Set<ZSetOperations.TypedTuple<String>> result = zSet.reverseRangeWithScores(SCORE_KEY, 0, -1);
+			return (result != null) ? new ArrayList<>(result) : Collections.emptyList();
 		} catch (RedisConnectionFailureException e) {
 			throw new BusinessException(GlobalErrorCodes.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			throw new BusinessException(GlobalErrorCodes.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 }

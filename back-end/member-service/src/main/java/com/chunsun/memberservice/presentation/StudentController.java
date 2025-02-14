@@ -1,5 +1,7 @@
 package com.chunsun.memberservice.presentation;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.memberservice.application.dto.StudentDto;
 import com.chunsun.memberservice.application.service.StudentService;
+import com.chunsun.memberservice.domain.Entity.Student;
 
 import lombok.RequiredArgsConstructor;
 
@@ -58,6 +61,13 @@ public class StudentController {
 		@PathVariable Long id) {
 
 		StudentDto.GetDetailResponse response = studentService.getDetail(id);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping
+	public ResponseEntity<StudentDto.GetListResponse> studentsId() {
+		StudentDto.GetListResponse response = studentService.getList();
+
 		return ResponseEntity.ok(response);
 	}
 }

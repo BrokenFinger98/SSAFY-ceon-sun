@@ -1,5 +1,7 @@
 package com.chunsun.memberservice.presentation;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.memberservice.application.dto.MemberDto;
 import com.chunsun.memberservice.application.service.MemberService;
+import com.chunsun.memberservice.config.feign.RankClient;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 	private final MemberRepository memberRepository;
+	private final RankClient rankClient;
 
 	/*
 	* 회원가입
@@ -101,5 +105,14 @@ public class MemberController {
 		@PathVariable Long id) {
 		return memberRepository.existsById(id);
 	}
-}
 
+	@GetMapping("/ranking")
+	public ResponseEntity<List<MemberDto.TeacherListItem>> getTeachersRank(){
+
+		List<MemberDto.TeacherTupleDto> teachersRank = rankClient.getTeachersRank();
+
+		List<MemberDto.TeacherListItem> result = memberService.getTeachersRank(teachersRank);
+
+		return ResponseEntity.ok(result);
+	}
+}

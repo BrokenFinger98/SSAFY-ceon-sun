@@ -46,8 +46,8 @@ public class TeacherServiceImpl implements TeacherService {
 		Teacher teacher = new Teacher(
 			member,
 			request.description(),
-			request.careerProgress(),
 			request.careerDescription(),
+			request.classProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
@@ -74,7 +74,7 @@ public class TeacherServiceImpl implements TeacherService {
 		teacher.updateCard(
 			request.description(),
 			request.careerDescription(),
-			request.careerProgress(),
+			request.classProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
@@ -122,6 +122,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 		return new TeacherDto.GetDetailResponse(
 			memberInfo.getName(),
+			memberInfo.getProfileImage(),
 			memberInfo.getNickname(),
 			memberInfo.getGender(),
 			Period.between(memberInfo.getBirthdate(), LocalDate.now()).getYears(),

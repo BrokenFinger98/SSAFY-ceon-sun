@@ -9,13 +9,12 @@ spring:
     url: jdbc:mysql://chunsun-db:3306/member?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
 
   jpa:
-    database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
 
   security:
     oauth2:
@@ -33,11 +32,14 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
   data:
     redis:
       host: auth-redis-db
       port: 6379
+
+token:
+  access_expiration_time: 3600000
+  refresh_expiration_time: 2592000000
 
 snowflake:
   machine-id: 1

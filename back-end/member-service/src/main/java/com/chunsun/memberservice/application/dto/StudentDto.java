@@ -30,6 +30,7 @@ public record StudentDto() {
 
 	public record GetDetailResponse(
 		String name,
+		String profileImage,
 		String nickname,
 		Gender gender,
 		Integer age,
@@ -37,4 +38,8 @@ public record StudentDto() {
 		List<Category> categories) {
 	}
 
+	public record GetListResponse(
+		List<Long> studentsId
+	){
+	}
 }

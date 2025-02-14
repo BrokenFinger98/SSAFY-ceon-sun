@@ -2,6 +2,8 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,11 +101,23 @@ public class StudentServiceImpl implements StudentService {
 
 		return new StudentDto.GetDetailResponse(
 			memberInfo.getName(),
+			memberInfo.getProfileImage(),
 			memberInfo.getNickname(),
 			memberInfo.getGender(),
 			Period.between(memberInfo.getBirthdate(), LocalDate.now()).getYears(),
 			studentInfo.getDescription(),
 			categoryService.getUserCategories(id)
+		);
+	}
+
+	// 학생 아이디
+	@Override
+	public StudentDto.GetListResponse getList() {
+
+		List<Long> studentIds = studentRepository.findAll().stream().map(Student::getId).collect(Collectors.toList());
+
+		return new StudentDto.GetListResponse(
+			studentIds
 		);
 	}
 }

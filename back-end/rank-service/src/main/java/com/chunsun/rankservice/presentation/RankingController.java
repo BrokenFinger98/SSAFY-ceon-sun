@@ -1,6 +1,8 @@
 package com.chunsun.rankservice.presentation;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chunsun.rankservice.application.dto.RankingDto;
 import com.chunsun.rankservice.application.service.RankingService;
 
 import lombok.RequiredArgsConstructor;
@@ -60,9 +63,12 @@ public class RankingController {
 		return "Redis 랭킹 포인트 업데이트";
 	}
 
-	@GetMapping("/top/{count}")
-	public Set<ZSetOperations.TypedTuple<String>> getTopRankedTeachers(@PathVariable int count) {
-
-		return rankingService.getTopRankedTeachers(count);
+	@GetMapping("/top")
+	public List<RankingDto.TeacherTupleDto> getTeachersRank() {
+		return rankingService.getTeachersRank()
+			.stream()
+			.map(tuple -> new RankingDto.TeacherTupleDto(tuple.getValue(), tuple.getScore()))
+			.collect(Collectors.toList());
 	}
+
 }

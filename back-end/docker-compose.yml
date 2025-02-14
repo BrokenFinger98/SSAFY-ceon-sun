@@ -55,7 +55,7 @@ services:
       - chunsun-network
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-
+#
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -264,6 +264,17 @@ services:
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
 
+  rank-redis:
+    image: redis:7.0
+    container_name: rank-redis
+    restart: always
+    ports:
+      - "6377:6379"
+    networks:
+      - chunsun-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
   rank-service:
     container_name: rank-service
     build:
@@ -340,8 +351,8 @@ services:
     environment:
       spring.cloud.config.username: "${CONFIG_USER}"
       spring.cloud.config.password: "${CONFIG_PASSWORD}"
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+      MONGO_USERNAME: "${MONGO_USERNAME}"
+      MONGO_PASSWORD: "${MONGO_PASSWORD}"
     networks:
       - chunsun-network
     depends_on:
@@ -366,8 +377,8 @@ services:
     environment:
       spring.cloud.config.username: "${CONFIG_USER}"
       spring.cloud.config.password: "${CONFIG_PASSWORD}"
-      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
-      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+      MONGO_USERNAME: "${MONGO_USERNAME}"
+      MONGO_PASSWORD: "${MONGO_PASSWORD}"
     networks:
       - chunsun-network
     depends_on:

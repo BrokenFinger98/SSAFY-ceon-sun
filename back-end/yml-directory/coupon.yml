@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
 
   data:
@@ -28,7 +28,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
-        linger.ms: 5
-        batch.size: 32768
+        linger.ms: 10
+        batch.size: 65536
+        buffer.memory: 33554432
+        compression.type: lz4
         enable.idempotence: true
         transactional.id: "coupon-tx-producer"

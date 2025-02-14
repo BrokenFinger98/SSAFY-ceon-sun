@@ -1,4 +1,4 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo-db:27017/authdb?authSource=authdb
+      uri: mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongo-db:27017/chatdb?authSource=chatdb

@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CouponErrorCodes implements ErrorCode {
 
-    INVALID_REQUEST(BAD_REQUEST, "COMMON4001", "올바르지 않은 요청입니다."),
+    INVALID_REQUEST(BAD_REQUEST, "COUPON4001", "올바르지 않은 요청입니다."),
     INVALID_AUTHORITY(FORBIDDEN, "COUPON4002", "해당 리소스에 접근할 권한이 없습니다."),
     MISSING_AUTHORIZATION_HEADER(UNAUTHORIZED, "COUPON4003", "Authorization 헤더가 누락되었습니다."),
     INVALID_BEARER_TOKEN(UNAUTHORIZED, "COUPON4004", "올바른 Bearer 토큰이 필요합니다."),

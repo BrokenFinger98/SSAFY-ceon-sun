@@ -47,9 +47,27 @@ public record MemberDto() {
 
 	public record MemberListItem(
 		Long id,
+		String profileImage,
 		String nickname,
 		Integer age,
 		Gender gender,
 		List<Category> categories){
 	}
+
+	public record TeacherTupleDto(
+		String value,
+		Double score
+	){
+	}
+
+	public record TeacherListItem(
+		Long id,
+		String profileImage,
+		String nickname,
+		Integer age,
+		Gender gender,
+		List<Category> categories,
+		Double score){
+	}
+
 }

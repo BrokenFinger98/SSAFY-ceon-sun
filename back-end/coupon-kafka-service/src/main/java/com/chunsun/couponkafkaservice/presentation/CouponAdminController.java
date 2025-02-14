@@ -18,9 +18,7 @@ import com.chunsun.couponkafkaservice.application.service.CouponService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @RestController

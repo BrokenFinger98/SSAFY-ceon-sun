@@ -3,13 +3,24 @@ package com.chunsun.couponservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import feign.Logger;
+import com.chunsun.couponservice.common.error.FeignErrorDecoder;
+
+import feign.RequestInterceptor;
+import feign.codec.ErrorDecoder;
 
 @Configuration
 public class FeignConfig {
 
 	@Bean
-	public Logger.Level feginLoggerLevel() {
-		return Logger.Level.FULL;
+	public RequestInterceptor requestInterceptor() {
+		return requestTemplate -> {
+			requestTemplate.header("Content-Type", "application/json");
+			requestTemplate.header("Accept", "application/json");
+		};
+	}
+
+	@Bean
+	public ErrorDecoder errorDecoder() {
+		return new FeignErrorDecoder();
 	}
 }

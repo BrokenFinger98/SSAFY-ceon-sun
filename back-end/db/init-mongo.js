@@ -5,7 +5,7 @@ print("🔹 MongoDB 초기 사용자 설정 시작...");
 db = db.getSiblingDB("chatdb");
 db.createUser({
     user: "chunsun",
-    pwd: "chunsun",
+    pwd: "sixman1!",
     roles: [{ role: "readWrite", db: "chatdb" }]
 });
 

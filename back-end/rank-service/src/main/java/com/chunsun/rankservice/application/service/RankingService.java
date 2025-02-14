@@ -1,5 +1,6 @@
 package com.chunsun.rankservice.application.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.redis.core.ZSetOperations;
@@ -16,5 +17,5 @@ public interface RankingService {
 
 	void syncRedisRankingPoints();
 
-	Set<ZSetOperations.TypedTuple<String>> getTopRankedTeachers(int count);
+	List<ZSetOperations.TypedTuple<String>> getTeachersRank();
 }
