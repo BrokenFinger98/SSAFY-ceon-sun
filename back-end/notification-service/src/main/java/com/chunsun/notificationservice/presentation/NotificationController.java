@@ -47,8 +47,10 @@ public class NotificationController {
 	 * @return "SUCCESS" 문자열을 포함한 200 OK 응답
 	 */
 	@PostMapping("/coupons/send/all")
-	public ResponseEntity<String> sendAllNotifications() {
-		return ResponseEntity.ok("SUCCESS");
+	public ResponseEntity<String> sendCouponNotificationToAllUsers(@RequestBody NotificationDto.CouponRequestDto requestDto) {
+		notificationService.sendCouponNotificationToAllUsers(requestDto);
+
+		return ResponseEntity.ok("COUPON SEND ALL NOTIFICATIONS");
 	}
 
 	/**

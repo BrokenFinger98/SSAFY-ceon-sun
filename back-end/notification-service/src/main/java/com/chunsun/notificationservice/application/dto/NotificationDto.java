@@ -13,6 +13,14 @@ public class NotificationDto {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
+	public static class CouponRequestDto {
+		private String message;
+	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
 	public static class RequestDto {
 		private String sendUserId;
 		private String targetUserId;

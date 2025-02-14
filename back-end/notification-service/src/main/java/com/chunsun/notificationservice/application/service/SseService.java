@@ -39,7 +39,7 @@ public class SseService {
 		return emitter;
 	}
 
-	public void sendNotification(String userId, NotificationDto.ResponseDto responseDto) {
+	public void sendNotification(String userId, String notificationId) {
 		SseEmitter emitter = sseEmitters.get(Long.valueOf(userId));
 		if (emitter == null) {
 			log.warn("SSE Emitter 없음 : {}", userId);
@@ -49,8 +49,8 @@ public class SseService {
 		try {
 			emitter.send(SseEmitter.event()
 				.name("notification")
-				.data(responseDto));
-			log.info("SSE 전송 성공: {}", responseDto);
+				.data(notificationId));
+			log.info("SSE 전송 성공 id : {}", notificationId);
 		} catch (IOException e) {
 			sseEmitters.remove(userId);
 			log.error("SSE 전송 실패: {}", e.getMessage());

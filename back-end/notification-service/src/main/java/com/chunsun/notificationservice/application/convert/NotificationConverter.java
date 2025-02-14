@@ -25,25 +25,4 @@ public class NotificationConverter {
 			.isRead(notification.isRead())
 			.build();
 	}
-
-	public static Notification toNotification(NotificationDto.EventDto eventDto) {
-		return Notification.builder()
-			.sendUserId(eventDto.getSendUserId())
-			.targetUserId(eventDto.getTargetUserId())
-			.type(eventDto.getType())
-			.message(eventDto.getMessage())
-			.isRead(eventDto.isRead())
-			.build();
-	}
-
-	public static NotificationDto.EventDto toEventDto(Notification notification) {
-		return NotificationDto.EventDto.builder()
-			.id(notification.getId())
-			.sendUserId(notification.getSendUserId())
-			.targetUserId(notification.getTargetUserId())
-			.type(notification.getType())
-			.message(notification.getMessage())
-			.isRead(notification.isRead())
-			.build();
-	}
 }

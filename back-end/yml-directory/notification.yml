@@ -5,7 +5,7 @@ spring:
   application:
     name: notification-service
   kafka:
-    bootstrap-servers: kafka1:9092, kafka2:9093, kafka2:9094
+    bootstrap-servers: kafka1:9092, kafka2:9092, kafka3:9092
     consumer:
       group-id: notification-group
       auto-offset-reset: earliest
@@ -43,3 +43,4 @@ mongodb:
 sse:
   subscribe:
     timeout: 3600000
+

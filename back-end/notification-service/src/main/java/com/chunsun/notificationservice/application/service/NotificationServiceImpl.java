@@ -3,14 +3,21 @@ package com.chunsun.notificationservice.application.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chunsun.notificationservice.application.convert.NotificationConverter;
 import com.chunsun.notificationservice.application.dto.NotificationDto;
+import com.chunsun.notificationservice.application.vo.NotificationType;
 import com.chunsun.notificationservice.common.error.NotificationErrorCodes;
 import com.chunsun.notificationservice.common.exception.NotificationException;
+import com.chunsun.notificationservice.config.feign.MemberFeignClient;
 import com.chunsun.notificationservice.domain.entity.Notification;
 import com.chunsun.notificationservice.domain.repository.NotificationRepository;
 
@@ -24,26 +31,39 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 	private final NotificationRepository notificationRepository;
+	private final MemberFeignClient memberFeignClient;
+	private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+	private final SseService sseService;
 
 	/**
 	 * 1) 모든 STUDENT 유저 조회
 	 * 2) 해당 유저들에 대해 알람 추가
 	 */
-	public void sendCouponNotificationToAllUsers(String messageContent) {
+	public void sendCouponNotificationToAllUsers(NotificationDto.CouponRequestDto requestDto) {
 		// 모든 유저 조회 - 멤버 서버에서 모든 유저 id List 받아오기
+		var memberIdList = memberFeignClient.getStudentIds().getStudentsId();
+		System.out.println(memberIdList);
 
-		// 각 유저에 대한 알림 메시지 생성
-		List<Notification> notifications = new ArrayList<>();
-		// for (User user : allUsers) {
-		// 	Notification notification = new Notification(user.getId(), messageContent, LocalDateTime.now());
-		// 	notifications.add(notification);
-		//
-		// 	// SSE를 통해 실시간 알림 전송
-		// 	sseEmitterService.sendNotification(user.getId(), "쿠폰이 발급되었습니다!");
-		// }
-		//
-		// // 한 번에 NoSQL에 저장
-		// notificationRepository.insertAll(notifications);
+		if (memberIdList.isEmpty()) {
+			throw new NotificationException(NotificationErrorCodes.NOT_FOUND_NOTIFICATION_USER);
+		}
+
+		log.info("총 {}명의 유저에게 알림 저장 시도", memberIdList.size());
+
+		List<Notification> notifications = memberIdList.stream()
+			.map(id -> new Notification().builder()
+					.targetUserId(String.valueOf(id))
+					.type(NotificationType.COUPON.name())
+					.message(requestDto.getMessage())
+					.isRead(false)
+					.build()
+			)
+			.collect(Collectors.toList());
+
+		notificationRepository.insert(notifications);
+		log.info("유저 알림 저장 성공");
+
+		sendNotifications(notifications);
 	}
 
 	/**
@@ -89,5 +109,22 @@ public class NotificationServiceImpl implements NotificationService {
 
 			return NotificationConverter.toResponseDto(notification);
 		});
+	}
+
+	private void sendNotifications(List<Notification> notificationList) {
+		log.info("모든 유저 쿠폰 알림 발송 시작");
+
+		List<CompletableFuture<Void>> futures = notificationList.stream()
+			.map(notification -> CompletableFuture.runAsync(() -> {
+				try {
+					sseService.sendNotification(notification.getTargetUserId(), notification.getId());
+				} catch (Exception e) {
+					log.error("전송 실패 userId={}, error={}", notification, e.getMessage());
+				}
+			}, executorService))
+			.collect(Collectors.toList());
+
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+			.thenRun(() -> log.info("모든 유저에게 알림 전송 완료"));
 	}
 }

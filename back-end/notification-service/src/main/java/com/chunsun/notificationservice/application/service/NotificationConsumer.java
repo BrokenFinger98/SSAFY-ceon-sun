@@ -42,7 +42,7 @@ public class NotificationConsumer {
 		notificationRepository.save(notification);
 
 		NotificationDto.ResponseDto responseDto = NotificationConverter.toResponseDto(notification);
-		sseService.sendNotification(event.getTargetUserId(), responseDto);
+		sseService.sendNotification(event.getTargetUserId(), responseDto.getId());
 
 		ack.acknowledge();
 		log.info("Kafka 오프셋 커밋 완료: partition={}, offset={}", record.partition(), record.offset());
