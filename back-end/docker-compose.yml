@@ -385,21 +385,21 @@ services:
     build:
       context: ./notification-service
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      spring.cloud.config.uri: http://config-service:8888
-      eureka.client.serviceUrl.defaultZone: http://discovery-service:8761/eureka/
-      spring.kafka.bootstrap-servers: kafka1:9092,kafka2:9093,kafka3:9094
-      spring.data.mongodb.uri: mongodb://root:1234@mongo-db:27017/notifications
+      spring.cloud.config.username: "${CONFIG_USER}"
+      spring.cloud.config.password: "${CONFIG_PASSWORD}"
+      MONGO_USERNAME: "${MONGO_USERNAME}"
+      MONGO_PASSWORD: "${MONGO_PASSWORD}"
     networks:
       - chunsun-network
     depends_on:
-      config-service:
-        condition: service_healthy
       discovery-service:
         condition: service_healthy
-      gateway-service:
+      config-service:
         condition: service_healthy
-      kafka3:
+      gateway-service:
         condition: service_healthy
       mongo-db:
         condition: service_healthy

@@ -1,16 +1,11 @@
 server:
-  port: 8020
+  port: 0
 
 spring:
-  config:
-    import: "optional:configserver:"
-    activate:
-      on-profile: local
-  eureka:
-    client:
-      enabled: false
+  application:
+    name: notification-service
   kafka:
-    bootstrap-servers: localhost:29092, localhost:29093, localhost:29094
+    bootstrap-servers: kafka1:9092, kafka2:9093, kafka2:9094
     consumer:
       group-id: notification-group
       auto-offset-reset: earliest
@@ -32,20 +27,6 @@ spring:
         spring.json.add.type.headers: false
     listener:
       ack-mode: manual_immediate
-
-  data:
-    mongodb:
-      uri: mongodb://chunsun:chunsun@localhost:27017/notifications?authSource=notifications
-
-eureka:
-  client:
-    enabled: false
-#eureka:
-#  client:
-#    register-with-eureka: false
-#    fetch-registry: false
-#    service-url:
-#      defaultZone: http://127.0.0.1:8761/eureka
 
 logging:
   level:
