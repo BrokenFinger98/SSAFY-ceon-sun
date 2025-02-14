@@ -1,0 +1,64 @@
+server:
+  port: 8020
+
+spring:
+  config:
+    import: "optional:configserver:"
+    activate:
+      on-profile: local
+  eureka:
+    client:
+      enabled: false
+  kafka:
+    bootstrap-servers: localhost:29092, localhost:29093, localhost:29094
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+        max.poll.records: 30
+        retry.backoff.ms: 1000
+        fetch.max.wait.ms: 5000
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      delivery.timeout.ms: 3000
+      acks: all
+      properties:
+        spring.json.add.type.headers: false
+    listener:
+      ack-mode: manual_immediate
+
+  data:
+    mongodb:
+      uri: mongodb://chunsun:chunsun@localhost:27017/notifications?authSource=notifications
+
+eureka:
+  client:
+    enabled: false
+#eureka:
+#  client:
+#    register-with-eureka: false
+#    fetch-registry: false
+#    service-url:
+#      defaultZone: http://127.0.0.1:8761/eureka
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.kafka: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    com.chunsun.notificationservice: DEBUG
+
+mongodb:
+  notification:
+    expire: 2592000
+
+sse:
+  subscribe:
+    timeout: 3600000

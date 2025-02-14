@@ -1,0 +1,48 @@
+server:
+  port: 0
+
+spring:
+  import: "configserver:"
+  application:
+    name: notification-service
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+  kafka:
+    bootstrap-servers: kafka1:9092, kafka2:9093, kafka3:9094
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      properties:
+        spring.json.add.type.headers: false
+
+  data:
+    mongodb:
+      uri: mongodb://root:1234@127.0.0.1:27017/notifications
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.kafka: DEBUG
+    org.springframework.data.mongodb: DEBUG
+    com.chunsun.notificationservice: DEBUG
+
