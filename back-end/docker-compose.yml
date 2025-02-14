@@ -252,17 +252,6 @@ services:
         condition: service_healthy
       gateway-service:
         condition: service_healthy
-        
-  rank-redis:
-    image: redis:7.0
-    container_name: rank-redis
-    restart: always
-    ports:
-      - "6377:6379"
-    networks:
-      - chunsun-network
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
 
   rank-redis:
     image: redis:7.0
