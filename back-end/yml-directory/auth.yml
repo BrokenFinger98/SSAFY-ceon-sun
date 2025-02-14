@@ -21,8 +21,9 @@ spring:
       client:
         registration:
           kakao:
-            client-id: '{cipher}2b2797e5becc8c60ed4a90d5bbdc8769b78b3b82cc3819250e6237f61532b410132210e63f381889ca4f487e0a61b027c6e2a52ea2d102f62644937b905d61b6'
-            redirect-uri: http://i12a505.p.ssafy.io
+            client-id: "{cipher}2b2797e5becc8c60ed4a90d5bbdc8769b78b3b82cc3819250e6237f61532b410132210e63f381889ca4f487e0a61b027c6e2a52ea2d102f62644937b905d61b6"
+            # redirect-uri: http://i12a505.p.ssafy.io
+            redirect-uri: http://localhost:5173
             authorization-grant-type: authorization_code
             scope: profile_nickname, account_email
             client-name: kakao

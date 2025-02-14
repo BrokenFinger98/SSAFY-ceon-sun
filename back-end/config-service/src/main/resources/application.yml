@@ -14,8 +14,8 @@ spring:
   rabbitmq:
     host: rabbitmq
     port: 5672
-    username: '{cipher}251c14591c8e02eb58634a299505965053c7f2ff0736eeb05d7ed4f6a72bdb32'
-    password: '{cipher}d8b83466428f1b55ccc9e61d853d439f4aaec705eb87e74e3578be7b7e54db47'
+    username: "{cipher}251c14591c8e02eb58634a299505965053c7f2ff0736eeb05d7ed4f6a72bdb32"
+    password: "{cipher}d8b83466428f1b55ccc9e61d853d439f4aaec705eb87e74e3578be7b7e54db47"
 
   cloud:
     config:
@@ -23,9 +23,9 @@ spring:
       server:
         git:
           uri: https://lab.ssafy.com/s12-webmobile1-sub1/S12P11A505.git
-          username: '{cipher}374c6c8609f33a51ba53ef3eec57103c119ca35521f5a7fb927f146dc290fd28'
-          password: '{cipher}f727720e7b66558960e2bb3367b8a822271762557a6e77a7d24d50337981f0c789791ee4da1020108aca3bc929e447e5'
-          default-label: BE-master
+          username: "{cipher}374c6c8609f33a51ba53ef3eec57103c119ca35521f5a7fb927f146dc290fd28"
+          password: "{cipher}f727720e7b66558960e2bb3367b8a822271762557a6e77a7d24d50337981f0c789791ee4da1020108aca3bc929e447e5"
+          default-label: FE-test
           searchPaths: back-end/yml-directory
 
 management:
