@@ -3,17 +3,21 @@ package com.chunsun.chatservice.web.controller;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.chatservice.kafka.ChatMessageProducer;
+import com.chunsun.chatservice.service.ChatRoomService;
+import com.chunsun.chatservice.util.JwtUtil;
+import com.chunsun.chatservice.web.dto.ChatRoomDto;
 import com.chunsun.chatservice.web.dto.MessageDto;
 import com.chunsun.chatservice.web.dto.NewChatRoomDto;
-import com.chunsun.chatservice.service.ChatRoomService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatRoomController {
 
 	private final ChatRoomService chatRoomService;
-
 	private final ChatMessageProducer chatMessageProducer;
+	private final JwtUtil jwtUtil;
 
 	@GetMapping("/chat")
 	public String chat() {
@@ -59,5 +63,21 @@ public class ChatRoomController {
 
 	/**
 	 * 내 채팅방 목록 조회
+	 * 채팅방 ID, 상대방 ID, 상대방 이름
 	 */
+	@GetMapping("/chat-rooms")
+	public ResponseEntity<List<ChatRoomDto.ResponseDto>> getChatRooms(
+		@RequestHeader("Authorization") String token) {
+
+		token = token.substring(7);
+		log.info("token: {}", token);
+
+		String userId = jwtUtil.getId(token);
+		String role = jwtUtil.getRole(token);
+
+		log.info("userId: {}, role: {}", userId, role);
+
+		List<ChatRoomDto.ResponseDto> chatRoomsByUserId = chatRoomService.getChatRoomsByUserId(userId, role);
+		return ResponseEntity.ok().body(chatRoomsByUserId);
+	}
 }

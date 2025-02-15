@@ -10,4 +10,6 @@ public interface StudentService {
 	StudentDto.GetCardResponse getCard(Long id);
 
 	StudentDto.GetDetailResponse getDetail(Long id);
+
+	StudentDto.GetListResponse getList();
 }

@@ -69,3 +69,11 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/chat-service/(?<segment>/.*)?, /$\{segment}
+
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notification-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/notification-service/(?<segment>/.*)?, /$\{segment}

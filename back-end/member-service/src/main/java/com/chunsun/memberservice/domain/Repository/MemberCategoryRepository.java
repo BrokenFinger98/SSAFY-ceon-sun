@@ -17,5 +17,4 @@ public interface MemberCategoryRepository extends JpaRepository<MemberCategory, 
 	List<MemberCategory> findByMember(Member member);
 
 	List<MemberCategory> findByMemberId(Long memberId);
-
 }

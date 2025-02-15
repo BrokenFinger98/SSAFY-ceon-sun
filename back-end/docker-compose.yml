@@ -18,7 +18,7 @@ services:
     networks:
       - chunsun-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -55,7 +55,7 @@ services:
       - chunsun-network
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
-
+#
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -71,7 +71,7 @@ services:
     networks:
       - chunsun-network
     healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
+      test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -253,6 +253,17 @@ services:
       gateway-service:
         condition: service_healthy
 
+  rank-redis:
+    image: redis:7.0
+    container_name: rank-redis
+    restart: always
+    ports:
+      - "6377:6379"
+    networks:
+      - chunsun-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+
   rank-service:
     container_name: rank-service
     build:
@@ -369,6 +380,31 @@ services:
       mongo-db:
         condition: service_healthy
 
+  notification-service:
+    container_name: notification-service
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      spring.cloud.config.username: "${CONFIG_USER}"
+      spring.cloud.config.password: "${CONFIG_PASSWORD}"
+      MONGO_USERNAME: "${MONGO_USERNAME}"
+      MONGO_PASSWORD: "${MONGO_PASSWORD}"
+    networks:
+      - chunsun-network
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      config-service:
+        condition: service_healthy
+      gateway-service:
+        condition: service_healthy
+      mongo-db:
+        condition: service_healthy
+
+
   ############################
   # Kafka & Zookeeper 설정 추가
   ############################
@@ -425,7 +461,7 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9092,EXTERNAL://localhost:29093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka2:9092,EXTERNAL://kafka2:29093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -445,7 +481,7 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka3:9092,EXTERNAL://localhost:29094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka3:9092,EXTERNAL://kafka3:29094
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

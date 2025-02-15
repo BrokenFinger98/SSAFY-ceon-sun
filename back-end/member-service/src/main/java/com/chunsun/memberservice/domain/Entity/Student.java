@@ -54,6 +54,7 @@ public class Student {
 		this.isExposed = isExposed;
 		this.description = description;
 		createdAt = LocalDateTime.now();
+		updatedAt = LocalDateTime.now();
 	}
 
 	public void updateCard(Boolean isExposed, String description) {

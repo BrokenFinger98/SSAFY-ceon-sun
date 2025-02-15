@@ -2,6 +2,7 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chunsun.memberservice.application.dto.TeacherDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
-import com.chunsun.memberservice.domain.Repository.CategoryRepository;
+import com.chunsun.memberservice.config.feign.RankClient;
 import com.chunsun.memberservice.domain.Entity.Member;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 import com.chunsun.memberservice.domain.Enum.Role;
@@ -26,6 +27,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private final TeacherRepository teacherRepository;
 	private final MemberRepository memberRepository;
 	private final CategoryService categoryService;
+	private final RankClient rankClient;
 
 	// 카드 생성
 	@Override
@@ -44,8 +46,8 @@ public class TeacherServiceImpl implements TeacherService {
 		Teacher teacher = new Teacher(
 			member,
 			request.description(),
-			request.careerProgress(),
 			request.careerDescription(),
+			request.classProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
@@ -72,7 +74,7 @@ public class TeacherServiceImpl implements TeacherService {
 		teacher.updateCard(
 			request.description(),
 			request.careerDescription(),
-			request.careerProgress(),
+			request.classProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
@@ -116,8 +118,11 @@ public class TeacherServiceImpl implements TeacherService {
 		Teacher teacherInfo = teacherRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
 
+		rankClient.incrementTeacherViewCount(teacherInfo.getId());
+
 		return new TeacherDto.GetDetailResponse(
 			memberInfo.getName(),
+			memberInfo.getProfileImage(),
 			memberInfo.getNickname(),
 			memberInfo.getGender(),
 			Period.between(memberInfo.getBirthdate(), LocalDate.now()).getYears(),
