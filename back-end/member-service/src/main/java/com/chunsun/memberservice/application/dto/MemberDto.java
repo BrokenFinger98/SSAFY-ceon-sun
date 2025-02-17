@@ -3,6 +3,8 @@ package com.chunsun.memberservice.application.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.chunsun.memberservice.domain.Entity.Category;
 import com.chunsun.memberservice.domain.Enum.Gender;
 
@@ -22,17 +24,13 @@ public record MemberDto() {
 	}
 
 	public record UpdateInfoRequest(
+		Long id,
 		String nickname,
-		String profileImage
+		MultipartFile profileImage
 	) {
 	}
 
 	public record UpdateInfoResponse() {
-	}
-
-	public record GetInfoRequest(
-		Long id
-	) {
 	}
 
 	public record GetInfoResponse(
@@ -68,6 +66,13 @@ public record MemberDto() {
 		Gender gender,
 		List<Category> categories,
 		Double score){
+	}
+
+	public record MemberNickNameDto(
+		Long id,
+		String nickname,
+		String profileImage
+	){
 	}
 
 }

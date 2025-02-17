@@ -25,14 +25,6 @@ public class CommonController {
 	private final CategoryService categoryService;
 	private final LikeService likeService;
 
-	/*
-	* 회원 카테고리 입력
-	* 회원 카테고리 수정
-	* 회원 카테고리 조회
-	* 카테고리 목록조회
-	* 찜하기
-	* */
-
 	@PostMapping("/category")
 	public ResponseEntity<CategoryDto.CategoryResponse> createCategory(
 		@RequestBody CategoryDto.CategoryRequest request) {
@@ -47,9 +39,8 @@ public class CommonController {
 	public ResponseEntity<CategoryDto.CategoryResponse> updateCategory(
 		@RequestBody CategoryDto.CategoryRequest request) {
 
-		// 기존 카테고리 정보 삭제
 		categoryService.deleteCategory(request.id());
-		// 카테고리 생성
+
 		createCategory(request);
 
 		return ResponseEntity.ok().body(new CategoryDto.CategoryResponse("카테고리 업데이트 완료", request.categoryIds()));
@@ -72,12 +63,10 @@ public class CommonController {
 	public ResponseEntity<LikeDto.LikeResponse> like(
 		@RequestBody LikeDto.LikeRequest request) {
 
-		// 이미 찜했다면 삭제, 안했다면 찜
 		Boolean isLike = likeService.getLike(request);
 
 		String message = isLike? (request.likerId() + "가 찜했습니다.") : (request.likerId() + "가 찜을 해제했습니다.");
 
 		return ResponseEntity.ok(new LikeDto.LikeResponse(isLike, message));
 	}
-
 }

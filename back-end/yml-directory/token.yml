@@ -1,3 +1,4 @@
 token:
-  expiration_time: 86400000
+  access_expiration_time: 3600000
+  refresh_expiration_time: 2592000000
   secret: '{cipher}99aa31ab9342113eaba303faed7d5c7f4e58f61aedbaac5696daf240c19ae6164c9ceb870704fa3f3533a2f50a47a1326ffdf250613a518b322f07626482c83a'

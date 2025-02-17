@@ -29,8 +29,7 @@ public class KakaoAuthService {
 	/**
 	 * 카카오 인가 코드를 받아 토큰 발급 API를 호출하는 메서드
 	 *
-	 * @param kakaoAuthCode 카카오에서 전달받은 인가 코드
-	 * @param redirectUrl
+	 * @param requestDto 카카오에서 전달받은 인가 코드
 	 * @return 카카오 토큰 발급 응답 (예: JSON 문자열)
 	 */
 	public Mono<AuthDto.KakaoTokenResponseDto> getKakaoToken(AuthDto.KakaoLoginRequestDto requestDto) {
@@ -45,7 +44,7 @@ public class KakaoAuthService {
 				try {
 					return Mono.just(objectMapper.readValue(response, AuthDto.KakaoTokenResponseDto.class));
 				} catch (Exception e) {
-					log.error("kakaoLogin Error Code : {} ", e.getStackTrace());
+					log.error("kakaoLogin Error Code : {} ", e);
 					return Mono.error(new BusinessException(AuthErrorCodes.INVALID_KAKAO_AUTHORIZATION_CODE));
 				}
 			});

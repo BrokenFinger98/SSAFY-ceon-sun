@@ -7,7 +7,6 @@ import com.chunsun.memberservice.application.dto.LikeDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
 import com.chunsun.memberservice.domain.Entity.Like;
-import com.chunsun.memberservice.domain.Entity.Member;
 import com.chunsun.memberservice.domain.Repository.LikeRepository;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 
@@ -21,7 +20,6 @@ public class LikeServiceImpl implements LikeService {
 	private final LikeRepository likeRepository;
 	private final MemberRepository memberRepository;
 
-	// 찜하기 요청, 취소
 	@Override
 	@Transactional
 	public Boolean getLike(LikeDto.LikeRequest request) {

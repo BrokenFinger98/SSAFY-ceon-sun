@@ -38,11 +38,6 @@ public record TeacherDto() {
 		String message) {
 	}
 
-	public record GetCardRequest(
-		Long id
-	){
-	}
-
 	public record GetCardResponse(
 		String description,
 		String careerDescription,

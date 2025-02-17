@@ -37,9 +37,5 @@ spring:
       host: auth-redis-db
       port: 6379
 
-token:
-  access_expiration_time: 3600000
-  refresh_expiration_time: 2592000000
-
 snowflake:
   machine-id: 1

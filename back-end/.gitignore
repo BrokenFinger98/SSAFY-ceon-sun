@@ -11,3 +11,7 @@ out/
 .vscode/
 
 .env
+
+.gitignore
+**/gradlew
+**/gradlew.bat

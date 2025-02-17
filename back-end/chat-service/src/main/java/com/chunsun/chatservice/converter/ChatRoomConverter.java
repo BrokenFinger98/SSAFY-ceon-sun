@@ -1,7 +1,7 @@
 package com.chunsun.chatservice.converter;
 
-import com.chunsun.chatservice.web.dto.NewChatRoomDto;
 import com.chunsun.chatservice.domain.ChatRoom;
+import com.chunsun.chatservice.web.dto.NewChatRoomDto;
 
 public class ChatRoomConverter {
 	public static ChatRoom ToEntity(NewChatRoomDto.RequestDto requestDto) {
