@@ -34,7 +34,7 @@ public class JwtUtil {
 				.getBody()
 				.getSubject();
 		} catch (JwtException e) {
-			log.error("Invalid JWT token: {}", e.getMessage());
+//			log.error("Invalid JWT token: {}", e.getMessage());
 			throw new BusinessException(ChatErrorCode.INVALID_TOKEN);
 		}
 	}
