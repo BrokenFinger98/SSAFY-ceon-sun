@@ -24,21 +24,21 @@ spring:
   hikari:
     maximum-pool-size: 10  # 커넥션 풀 크기 설정
 
+  cloud:
+    aws:
+      credentials:
+        #EC2 배포시 IAM role로 변경
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      region:
+        static: ${AWS_REGION}
+      s3:
+        bucket: ${AWS_BUCKET}
+      stack:
+        auto: false
+
   servlet:
     multipart:
       enabled: true
-      max-request-size: 30MB
-      max-file-size: 10MB
-
-cloud:
-  aws:
-    credentials:
-      #EC2 배포시 IAM role로 변경
-      access-key: ${AWS_ACCESS_KEY_ID}
-      secret-key: ${AWS_SECRET_ACCESS_KEY}
-    region:
-      static: ${AWS_REGION}
-    s3:
-      bucket: chunsunbucket
-    stack:
-      auto: false
+      max-request-size: 10MB
+      max-file-size: 5MB

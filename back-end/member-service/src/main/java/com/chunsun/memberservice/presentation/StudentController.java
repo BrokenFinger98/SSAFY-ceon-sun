@@ -1,7 +1,5 @@
 package com.chunsun.memberservice.presentation;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.memberservice.application.dto.StudentDto;
 import com.chunsun.memberservice.application.service.StudentService;
-import com.chunsun.memberservice.domain.Entity.Student;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,13 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentController {
 
 	private final StudentService studentService;
-
-	/*
-	* 학생 카드 생성
-	* 학생 카드 수정
-	* 학생 카드 조회(본인 카드)
-	* 학생 카드 조회(남 카드)
-	* */
 
 	@PostMapping
 	public ResponseEntity<StudentDto.CardResponse> addCard(
@@ -65,7 +55,7 @@ public class StudentController {
 	}
 
 	@GetMapping
-	public ResponseEntity<StudentDto.GetListResponse> studentsId() {
+	public ResponseEntity<StudentDto.GetListResponse> getStudentsId() {
 		StudentDto.GetListResponse response = studentService.getList();
 
 		return ResponseEntity.ok(response);

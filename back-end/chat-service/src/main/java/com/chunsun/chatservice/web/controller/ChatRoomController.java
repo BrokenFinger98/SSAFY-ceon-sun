@@ -68,7 +68,6 @@ public class ChatRoomController {
 	@GetMapping("/chat-rooms")
 	public ResponseEntity<List<ChatRoomDto.ResponseDto>> getChatRooms(
 		@RequestHeader("Authorization") String token) {
-
 		token = token.substring(7);
 		log.info("token: {}", token);
 

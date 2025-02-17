@@ -15,7 +15,6 @@ import com.chunsun.memberservice.domain.Repository.CategoryRepository;
 import com.chunsun.memberservice.domain.Entity.Member;
 import com.chunsun.memberservice.domain.Entity.MemberCategory;
 import com.chunsun.memberservice.domain.Repository.MemberCategoryRepository;
-import com.chunsun.memberservice.domain.Repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +26,6 @@ public class CategoryServiceImpl implements CategoryService {
 	private final MemberCategoryRepository memberCategoryRepository;
 	private final CategoryRepository categoryRepository;
 
-	// 카테고리 목록 불러오기
 	@Override
 	public List<Category> getList() {
 
@@ -36,7 +34,6 @@ public class CategoryServiceImpl implements CategoryService {
 		return categories;
 	}
 
-	// 유저가 선택한 카테고리 불러오기
 	@Override
 	public List<Category> getUserCategories(Long memberId) {
 
@@ -52,7 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
 		return categoryRepository.findByIdIn(categoryIds);
 	}
 
-	// 카테고리 생성 및 업데이트
 	@Override
 	@Transactional
 	public void createCategory(CategoryDto.CategoryRequest request) {
@@ -66,7 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 	}
 
-	// 카테고리 삭제
 	@Override
 	@Transactional
 	public void deleteCategory(Long memberId) {

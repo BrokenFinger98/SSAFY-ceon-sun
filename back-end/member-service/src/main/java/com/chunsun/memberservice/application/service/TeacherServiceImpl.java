@@ -2,7 +2,6 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.concurrent.CompletableFuture;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ public class TeacherServiceImpl implements TeacherService {
 	private final CategoryService categoryService;
 	private final RankClient rankClient;
 
-	// 카드 생성
 	@Override
 	@Transactional
 	public TeacherDto.CreateCardResponse createCard(TeacherDto.CreateCardRequest request) {
@@ -59,7 +57,6 @@ public class TeacherServiceImpl implements TeacherService {
 		return new TeacherDto.CreateCardResponse("선생 카드 생성 완료");
 	}
 
-	// 카드 업데이트
 	@Override
 	@Transactional
 	public TeacherDto.UpdateCardResponse updateCard(Long id, TeacherDto.UpdateCardRequest request) {
@@ -86,7 +83,6 @@ public class TeacherServiceImpl implements TeacherService {
 		return new TeacherDto.UpdateCardResponse("선생 카드 업데이트 완료");
 	}
 
-	// 카드 조회
 	@Override
 	public TeacherDto.GetCardResponse getCard(Long id) {
 
@@ -108,7 +104,6 @@ public class TeacherServiceImpl implements TeacherService {
 		);
 	}
 
-	// 카드 상세조회(남이 보는거)
 	@Override
 	public TeacherDto.GetDetailResponse getDetail(Long id) {
 
@@ -137,7 +132,6 @@ public class TeacherServiceImpl implements TeacherService {
 		);
 	}
 
-	// 누적 수업 횟수, 시간 업데이트
 	@Override
 	@Transactional
 	public TeacherDto.ClassFinishResponse updateClass(Long id, TeacherDto.ClassFinishRequest request) {
@@ -158,7 +152,6 @@ public class TeacherServiceImpl implements TeacherService {
 		return new TeacherDto.ClassFinishResponse(count, hours);
 	}
 
-	// 누적 수업 횟수, 시간 조회
 	@Override
 	public TeacherDto.ClassFinishResponse getClass(Long id) {
 

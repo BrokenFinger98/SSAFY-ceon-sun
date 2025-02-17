@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.chunsun.memberservice.application.dto.MemberDto;
 import com.chunsun.memberservice.application.service.MemberService;
@@ -30,18 +32,8 @@ public class MemberController {
 	private final MemberRepository memberRepository;
 	private final RankClient rankClient;
 
-	/*
-	* 회원가입
-	* 회원정보 수정
-	* 회원정보 조회(본인 상세정보)
-	* 회원 탈퇴
-	* 닉네임 중복 체크
-	* 학생 또는 선생 검색
-	* 회원 존재 유무 확인
-	* */
-
 	@PostMapping
-	public ResponseEntity<MemberDto.SignUpResponse> createInfo(
+	public ResponseEntity<MemberDto.SignUpResponse> signUpMember(
 		@RequestBody MemberDto.SignUpRequest request) {
 
 		MemberDto.SignUpResponse response = memberService.signUp(request);
@@ -50,17 +42,21 @@ public class MemberController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MemberDto.UpdateInfoResponse> updateInfo(
+	public ResponseEntity<MemberDto.UpdateInfoResponse> updateMemberProfile(
 		@PathVariable Long id,
-		@RequestBody MemberDto.UpdateInfoRequest request) {
+		@RequestParam("nickname") String nickname,
+		@RequestPart(value = "profileImage", required = false) MultipartFile image
+		) {
 
-		MemberDto.UpdateInfoResponse updateInfo = memberService.updateMemberInfo(id, request);
+		MemberDto.UpdateInfoRequest request = new MemberDto.UpdateInfoRequest(id, nickname, image);
+
+		MemberDto.UpdateInfoResponse updateInfo = memberService.updateMemberInfo(request);
 
 		return ResponseEntity.ok(updateInfo);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MemberDto.GetInfoResponse> getInfo(
+	public ResponseEntity<MemberDto.GetInfoResponse> getMemberProfile(
 		@PathVariable Long id) {
 
 		MemberDto.GetInfoResponse getInfo = memberService.getMemberInfo(id);
@@ -69,7 +65,7 @@ public class MemberController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> withdraw(
+	public ResponseEntity<Void> deleteMember(
 		@PathVariable Long id) {
 
 		memberService.deleteMember(id);
@@ -78,7 +74,7 @@ public class MemberController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<Void> nicknameCheck(
+	public ResponseEntity<Void> validateNickname(
 		@RequestParam String nickname) {
 
 		memberService.checkNicknameAvailability(nickname);
@@ -101,13 +97,21 @@ public class MemberController {
 	}
 
 	@GetMapping("/exist/{id}")
-	public boolean isExist(
+	public boolean checkMemberExists(
 		@PathVariable Long id) {
+
 		return memberRepository.existsById(id);
 	}
 
+	@GetMapping("/delete/{id}")
+	public boolean checkMemberDeleted(
+		@PathVariable Long id) {
+
+		return memberService.isDeleted(id);
+	}
+
 	@GetMapping("/ranking")
-	public ResponseEntity<List<MemberDto.TeacherListItem>> getTeachersRank(){
+	public ResponseEntity<List<MemberDto.TeacherListItem>> getTeacherRanking(){
 
 		List<MemberDto.TeacherTupleDto> teachersRank = rankClient.getTeachersRank();
 
@@ -122,5 +126,11 @@ public class MemberController {
 		List<MemberDto.MemberNickNameDto> nicknameList = memberService.getUserNicknames(ids);
 
 		return nicknameList;
+	}
+
+	@GetMapping("/payments")
+	public List<MemberDto.MemberListItem> getMemberList(@RequestParam List<Long> ids){
+
+		return memberService.getMembersInfo(ids);
 	}
 }

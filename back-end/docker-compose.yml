@@ -185,6 +185,10 @@ services:
     environment:
       spring.cloud.config.username: "${CONFIG_USER}"
       spring.cloud.config.password: "${CONFIG_PASSWORD}"
+      spring.cloud.aws.credentials.access-key: "${AWS_ACCESS_KEY_ID}"
+      spring.cloud.aws.credentials.secret-key: "${AWS_SECRET_ACCESS_KEY}"
+      spring.cloud.aws.region.static: "${AWS_REGION}"
+      spring.cloud.aws.s3.bucket: "${AWS_BUCKET}"
     networks:
       - chunsun-network
     depends_on:

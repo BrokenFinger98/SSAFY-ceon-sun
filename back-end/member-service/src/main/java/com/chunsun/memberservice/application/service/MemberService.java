@@ -10,7 +10,7 @@ public interface MemberService {
 
 	MemberDto.SignUpResponse signUp(MemberDto.SignUpRequest request);
 
-	MemberDto.UpdateInfoResponse updateMemberInfo(Long id, MemberDto.UpdateInfoRequest request);
+	MemberDto.UpdateInfoResponse updateMemberInfo(MemberDto.UpdateInfoRequest request);
 
 	MemberDto.GetInfoResponse getMemberInfo(Long id);
 
@@ -25,4 +25,6 @@ public interface MemberService {
 	List<MemberDto.TeacherListItem> getTeachersRank(List<MemberDto.TeacherTupleDto> teachersRank);
 
 	List<MemberDto.MemberNickNameDto> getUserNicknames(List<Long> ids);
+
+	List<MemberDto.MemberListItem> getMembersInfo(List<Long> ids);
 }

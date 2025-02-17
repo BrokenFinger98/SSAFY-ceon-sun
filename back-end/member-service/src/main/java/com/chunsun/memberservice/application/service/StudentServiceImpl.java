@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chunsun.memberservice.application.dto.StudentDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
-import com.chunsun.memberservice.domain.Repository.CategoryRepository;
 import com.chunsun.memberservice.domain.Entity.Member;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 import com.chunsun.memberservice.domain.Enum.Role;
@@ -29,7 +28,6 @@ public class StudentServiceImpl implements StudentService {
 	private final MemberRepository memberRepository;
 	private final CategoryService categoryService;
 
-	// 카드 생성
 	@Override
 	@Transactional
 	public StudentDto.CardResponse createCard(StudentDto.CreateCardRequest request) {
@@ -54,7 +52,6 @@ public class StudentServiceImpl implements StudentService {
 		return new StudentDto.CardResponse("학생 카드 생성 완료");
 	}
 
-	// 카드 업데이트
 	@Override
 	@Transactional
 	public StudentDto.CardResponse updateCard(Long id, StudentDto.UpdateCardRequest request) {
@@ -75,7 +72,6 @@ public class StudentServiceImpl implements StudentService {
 		return new StudentDto.CardResponse("학생 카드 업데이트 완료");
 	}
 
-	// 카드 조회
 	@Override
 	public StudentDto.GetCardResponse getCard(Long id) {
 
@@ -89,7 +85,6 @@ public class StudentServiceImpl implements StudentService {
 		);
 	}
 
-	// 카드 상세조회(남이 보는거)
 	@Override
 	public StudentDto.GetDetailResponse getDetail(Long id) {
 
@@ -110,7 +105,6 @@ public class StudentServiceImpl implements StudentService {
 		);
 	}
 
-	// 학생 아이디
 	@Override
 	public StudentDto.GetListResponse getList() {
 

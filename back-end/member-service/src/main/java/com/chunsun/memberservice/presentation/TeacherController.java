@@ -1,7 +1,5 @@
 package com.chunsun.memberservice.presentation;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,15 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class TeacherController {
 
 	private final TeacherService teacherService;
-
-	/*
-	* 선생 카드 생성
-	* 선생 카드 수정
-	* 선생 카드 조회(본인 카드)
-	* 선생 카드 조회(남 카드)
-	* 선생 수업 횟수/시간 업데이트
-	* 선생 수업 횟수/시간 조회
-	* */
 
 	@PostMapping
 	public ResponseEntity<TeacherDto.CreateCardResponse> addCard(

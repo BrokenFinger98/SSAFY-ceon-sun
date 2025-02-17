@@ -40,7 +40,6 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
 				attributes.put("userId", userId); // WebSocket 세션에 userId 저장
 				return true;
 			}
-
 			// 테스트용 코드
 			// String userId = token.substring(7);
 			// attributes.put("userId", userId); //  WebSocket 세션에 userId 저장
