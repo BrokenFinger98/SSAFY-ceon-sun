@@ -82,13 +82,13 @@ public class RedisServiceImpl implements RedisService {
 		final String issuedUsersKey = "coupon:issued:" + couponIssueRedis.couponId();
 		final String memberId = couponIssueRedis.memberId().toString();
 
-		Boolean alreadyIssued = redisTemplate.opsForSet().isMember(issuedUsersKey, memberId);
+		final Boolean alreadyIssued = redisTemplate.opsForSet().isMember(issuedUsersKey, memberId);
 		if (alreadyIssued != null && alreadyIssued) {
 			log.info("쿠폰 중복 발급 - memberId: {}, issuedUsersKey: {}", memberId, issuedUsersKey);
 			throw new BusinessException(COUPON_ALREADY_ISSUED);
 		}
 
-		Object stockObj = redisTemplate.opsForValue().get(couponRemainKey);
+		final Object stockObj = redisTemplate.opsForValue().get(couponRemainKey);
 		if(stockObj == null) {
 			log.info("재고 없음");
 		}

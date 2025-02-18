@@ -11,7 +11,7 @@ public interface CategoryService {
 
 	List<Category> getUserCategories(Long id);
 
-	void createCategory(CategoryDto.CategoryRequest request);
+	void createCategory(Long id, CategoryDto.CategoryRequest request);
 
-	void deleteCategory(Long id);
+	void updateCategory(Long id, List<Long> categoryIds);
 }

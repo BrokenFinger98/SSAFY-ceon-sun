@@ -9,6 +9,6 @@ import com.chunsun.couponservice.application.dto.NotificationRequestDto;
 @FeignClient(name = "notification-service")
 public interface NotificationClient {
 
-	@PostMapping("/coupons")
-	void sendNotification(@RequestBody NotificationRequestDto notificationRequestDto);
+	@PostMapping("/coupons/send/all")
+	String sendNotification(@RequestBody final NotificationRequestDto notificationRequestDto);
 }

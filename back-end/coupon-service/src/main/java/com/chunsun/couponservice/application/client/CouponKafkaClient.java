@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface CouponKafkaClient {
 
 	@PostMapping("/admin")
-	CreateCouponFeignResponse createCoupon(@RequestBody CreateCouponFeignRequest request);
+	CreateCouponFeignResponse createCoupon(@RequestBody final CreateCouponFeignRequest request);
 
 	@DeleteMapping("/admin/{couponId}")
-	void cancelCoupon(@PathVariable("couponId") Long couponId);
+	void cancelCoupon(@PathVariable("couponId") final Long couponId);
 }

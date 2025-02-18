@@ -1,4 +1,6 @@
 package com.chunsun.couponservice.application.dto;
 
-public record NotificationRequestDto() {
+public record NotificationRequestDto(
+	String message
+) {
 }

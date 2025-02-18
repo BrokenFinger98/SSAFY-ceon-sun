@@ -16,3 +16,19 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+
+  kafka:
+    bootstrap-servers: kafka1:9092, kafka2:9092, kafka3:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      delivery.timeout.ms: 3000
+      acks: all
+      properties:
+        spring.json.add.type.headers: false
+
+iamport:
+  api:
+    key: '{cipher}ffc313476c347a5e87dffbd3cb26e38e224a449d4e55778efcf678247eb23af2000d455a18c20f5b024170b814fe48f4'
+    secret: '{cipher}406d2217cbd7d5bdc8bde7395028cb1f0d2b51d864f4bddfba536fa8fecb5a5c265cf55040db0f2398b1cd6398789b3fa986b59ea59749d1708b02a0c807fa8f1d0fa340742fd95a9606811c1910a408d5077213cd5f5d363133dcf2e15df544d696c19de31e579b12077a2fca868ed3'

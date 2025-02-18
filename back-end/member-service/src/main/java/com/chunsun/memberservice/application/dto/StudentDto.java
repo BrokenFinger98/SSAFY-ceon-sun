@@ -7,7 +7,6 @@ import com.chunsun.memberservice.domain.Enum.Gender;
 
 public record StudentDto() {
 	public record CreateCardRequest(
-		Long id,
 		Boolean isExposed,
 		String description) {
 	}

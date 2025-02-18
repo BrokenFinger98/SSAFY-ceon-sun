@@ -22,28 +22,26 @@ public class Coupon extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", columnDefinition = "bigint NOT NULL AUTO_INCREMENT")
 	private Long id;
 
-	@Column(name = "name", nullable = false, columnDefinition = "varchar(255) NOT NULL")
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "discount_rate", nullable = false, columnDefinition = "int NOT NULL")
+	@Column(name = "discount_rate", nullable = false)
 	private Integer discountRate;
 
-	@Column(name = "valid_days", nullable = false, columnDefinition = "int NOT NULL")
+	@Column(name = "valid_days", nullable = false)
 	private Integer validDays;
 
-	@Column(name = "total_quantity", nullable = false, columnDefinition = "int NOT NULL")
+	@Column(name = "total_quantity", nullable = false)
 	private Integer totalQuantity;
 
-	@Column(name = "remaining_quantity", nullable = false, columnDefinition = "int NOT NULL")
+	@Column(name = "remaining_quantity", nullable = false)
 	private Integer remainingQuantity;
 
-	@Column(name = "expiry_date", nullable = false, columnDefinition = "datetime NOT NULL")
+	@Column(name = "expiry_date", nullable = false)
 	private LocalDateTime expiryDate;
 
-	// 필요하다면 생성자 추가
 	public Coupon(final String name, final Integer discountRate, final Integer validDays, final Integer totalQuantity) {
 		this.name = name;
 		this.discountRate = discountRate;

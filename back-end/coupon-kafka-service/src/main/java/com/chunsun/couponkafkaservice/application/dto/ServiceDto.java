@@ -3,6 +3,8 @@ package com.chunsun.couponkafkaservice.application.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ServiceDto() {
 
 	public record CreateCouponServiceRequest(
@@ -10,6 +12,12 @@ public record ServiceDto() {
 		Integer discountRate,
 		Integer validDays,
 		Integer totalQuantity
+	) {
+	}
+
+	public record UpdateCouponStatusServiceRequest(
+		Long memberId,
+		Long couponId
 	) {
 	}
 

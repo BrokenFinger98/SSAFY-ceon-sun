@@ -14,12 +14,8 @@ import lombok.Getter;
 public enum CouponKafkaErrorCodes implements ErrorCode {
 
     INVALID_REQUEST(BAD_REQUEST, "COUPONKAFKA4001", "올바르지 않은 요청입니다."),
-    INVALID_AUTHORITY(FORBIDDEN, "COUPONKAFKA4002", "해당 리소스에 접근할 권한이 없습니다."),
-    MISSING_AUTHORIZATION_HEADER(UNAUTHORIZED, "COUPONKAFKA4003", "Authorization 헤더가 누락되었습니다."),
-    INVALID_BEARER_TOKEN(UNAUTHORIZED, "COUPONKAFKA4004", "올바른 Bearer 토큰이 필요합니다."),
-    FORBIDDEN_ACCESS(FORBIDDEN, "COUPONKAFKA4005", "관리자 권한이 필요합니다."),
-
-    INVALID_COUPON_DELETE_REQUEST(BAD_REQUEST, "COUPONKAFKA4005", "존재하지 않는 쿠폰입니다."),
+    INVALID_COUPON_DELETE_REQUEST(BAD_REQUEST, "COUPONKAFKA4002", "존재하지 않는 쿠폰입니다."),
+    INVALID_COUPON_STATUS_UPDATE_REQUEST(BAD_REQUEST, "COUPONKAFKA4003", "존재하지 않는 Memeber_Conpon입니다.")
     ;
 
     private final HttpStatus httpStatus;

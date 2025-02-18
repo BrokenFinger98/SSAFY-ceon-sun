@@ -29,7 +29,7 @@ public class CouponAdminController {
 	@PostMapping
 	public ResponseEntity<CreateCouponControllerResponse> createCoupon(
 		@Valid @RequestBody final CreateCouponControllerRequest request) {
-		CreateCouponServiceResponse response = couponService.createCoupon(toCreateCouponServiceRequest(request));
+		final CreateCouponServiceResponse response = couponService.createCoupon(toCreateCouponServiceRequest(request));
 		return ResponseEntity.status(CREATED).body(toCreateCouponControllerResponse(response));
 	}
 

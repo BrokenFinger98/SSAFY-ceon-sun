@@ -20,18 +20,18 @@ public class UserIdInterceptor  implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (handler instanceof HandlerMethod) {
-			HandlerMethod handlerMethod = (HandlerMethod) handler;
+			final HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-			UserId userIdAnnotation = handlerMethod.getMethodAnnotation(UserId.class);
+			final UserId userIdAnnotation = handlerMethod.getMethodAnnotation(UserId.class);
 
 			if (userIdAnnotation == null) {
 				return true;
 			}
 
-			String userIdHeader  = request.getHeader(USER_ID_HEADER);
+			final String userIdHeader  = request.getHeader(USER_ID_HEADER);
 
 			try {
-				Long userId = Long.parseLong(userIdHeader);
+				final Long userId = Long.parseLong(userIdHeader);
 				request.setAttribute("UserId", userId);
 
 				return true;

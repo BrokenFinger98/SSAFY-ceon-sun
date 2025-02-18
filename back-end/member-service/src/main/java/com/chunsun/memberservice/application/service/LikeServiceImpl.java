@@ -31,19 +31,15 @@ public class LikeServiceImpl implements LikeService {
 			throw new BusinessException(GlobalErrorCodes.USER_NOT_FOUND);
 		}
 
-		Boolean isLike = likeRepository.existsByLikerIdAndLikeeId(liker,likee);
-
-		if(isLike) {
-			likeRepository.deleteByLikerIdAndLikeeId(liker, likee);
-
+		int deletedCount = likeRepository.deleteByLikerIdAndLikeeId(liker, likee);
+		if (deletedCount > 0) {
 			return false;
 		} else {
-			Like like =Like.builder().
-				likerId(liker).
-				likeeId(likee).
-				build();
+			Like like = Like.builder()
+				.likerId(liker)
+				.likeeId(likee)
+				.build();
 			likeRepository.save(like);
-
 			return true;
 		}
 	}

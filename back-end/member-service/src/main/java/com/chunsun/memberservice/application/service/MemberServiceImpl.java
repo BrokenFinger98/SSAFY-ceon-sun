@@ -18,7 +18,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.chunsun.memberservice.application.dto.MemberDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
@@ -49,18 +48,16 @@ public class MemberServiceImpl implements MemberService {
 	private final TeacherRepository teacherRepository;
 	private final MemberCategoryRepository memberCategoryRepository;
 	private final S3Service s3Service;
-	private final AmazonS3 amazonS3;
 
 	@Override
 	@Transactional
 	public MemberDto.SignUpResponse signUp(MemberDto.SignUpRequest request) {
 
-		if(memberRepository.existsByKakaoId(request.kakaoId())) {
+		if(memberRepository.existsByKakaoIdOrEmail(request.kakaoId(), request.email())){
+			if(memberRepository.existsByEmail(request.email())) {
+				throw new BusinessException(GlobalErrorCodes.DUPLICATE_EMAIL);
+			}
 			throw new BusinessException(GlobalErrorCodes.DUPLICATE_KAKAO_ID);
-		}
-
-		if(memberRepository.existsByEmail(request.email())) {
-			throw new BusinessException(GlobalErrorCodes.DUPLICATE_EMAIL);
 		}
 
 		Member member = Member.builder()
@@ -84,10 +81,6 @@ public class MemberServiceImpl implements MemberService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
-		if(member.getDeletedAt() != null) {
-			throw new BusinessException(GlobalErrorCodes.ALREADY_DELETED_USER);
-		}
-
 		memberCategoryRepository.deleteByMemberId(member.getId());
 
 		if (member.getRole() == Role.STUDENT && member.getStudent() != null) {
@@ -98,6 +91,7 @@ public class MemberServiceImpl implements MemberService {
 			Teacher teacher = teacherRepository.findById(id)
 				.orElseThrow(() -> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
 			teacher.delete();
+
 		}
 		member.delete();
 		memberRepository.save(member);
@@ -115,7 +109,6 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public MemberDto.UpdateInfoResponse updateMemberInfo(MemberDto.UpdateInfoRequest request) {
 
-
 		Member member = memberRepository.findById(request.id())
 			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
@@ -132,10 +125,15 @@ public class MemberServiceImpl implements MemberService {
 				throw new RuntimeException(e);
 			}
 		} else {
+			s3Service.deleteImage(profile);
 			profile = "";
 		}
 
-		member.updateInfo(request.nickname(), profile);
+		member.updateInfo(
+			request.nickname(),
+			profile
+		);
+
 		memberRepository.save(member);
 
 		return new MemberDto.UpdateInfoResponse();
@@ -343,5 +341,11 @@ public class MemberServiceImpl implements MemberService {
 			members.add(item);
 		}
 		return members;
+	}
+
+	@Override
+	public String getRole(Long id) {
+
+		return memberRepository.findRoleById(id).toString();
 	}
 }

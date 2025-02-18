@@ -46,4 +46,9 @@ public class CouponConverter {
 
 		return new SearchCouponsControllerResponse(controllerCoupons);
 	}
+
+	public static UpdateCouponStatusServiceRequest toUpdateCouponStatusServiceRequest(
+		UpdateCouponStatusControllerRequest request) {
+		return new UpdateCouponStatusServiceRequest(request.memberId(), request.couponId());
+	}
 }

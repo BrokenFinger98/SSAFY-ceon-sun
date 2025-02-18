@@ -1,5 +1,6 @@
-package com.chunsun.couponservice.config;
+package com.chunsun.couponservice.application.client;
 
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,6 +10,7 @@ import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 
 @Configuration
+@EnableFeignClients
 public class FeignConfig {
 
 	@Bean

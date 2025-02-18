@@ -21,9 +21,9 @@ public class KafkaProducerServiceImpl implements KafkaProducerService {
 	private final ObjectMapper objectMapper;
 
 	@Override
-	public void sendCouponIssuedEvent(IssueCouponRecord issueCouponRecord) {
+	public void sendCouponIssuedEvent(final IssueCouponRecord issueCouponRecord) {
 		try {
-			String jsonValue = objectMapper.writeValueAsString(issueCouponRecord);
+			final String jsonValue = objectMapper.writeValueAsString(issueCouponRecord);
 			kafkaTemplate.executeInTransaction(operations ->
 				operations.send(TOPIC, issueCouponRecord.couponId().toString(), jsonValue)
 			);

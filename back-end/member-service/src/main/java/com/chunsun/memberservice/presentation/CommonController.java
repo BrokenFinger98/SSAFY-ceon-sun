@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.memberservice.application.dto.CategoryDto;
 import com.chunsun.memberservice.application.dto.LikeDto;
 import com.chunsun.memberservice.application.service.CategoryService;
 import com.chunsun.memberservice.application.service.LikeService;
+import com.chunsun.memberservice.common.util.HeaderUtil;
 import com.chunsun.memberservice.domain.Entity.Category;
 
 import lombok.RequiredArgsConstructor;
@@ -27,28 +29,31 @@ public class CommonController {
 
 	@PostMapping("/category")
 	public ResponseEntity<CategoryDto.CategoryResponse> createCategory(
+		@RequestHeader("X-User-ID") Long memberId,
 		@RequestBody CategoryDto.CategoryRequest request) {
 
+		categoryService.createCategory(memberId, request);
 
-		categoryService.createCategory(request);
-
-		return ResponseEntity.ok().body(new CategoryDto.CategoryResponse("카테고리 입력/업데이트 완료", request.categoryIds()));
+		return ResponseEntity.ok().body(new CategoryDto.CategoryResponse("카테고리 입력 완료", request.categoryIds()));
 	}
 
-	@PutMapping("/category")
+	@PutMapping("/category/{id}")
 	public ResponseEntity<CategoryDto.CategoryResponse> updateCategory(
+		@RequestHeader("X-User-ID") Long memberId,
+		@PathVariable Long id,
 		@RequestBody CategoryDto.CategoryRequest request) {
+		HeaderUtil.validateUserId(id, memberId);
 
-		categoryService.deleteCategory(request.id());
-
-		createCategory(request);
+		categoryService.updateCategory(id, request.categoryIds());
 
 		return ResponseEntity.ok().body(new CategoryDto.CategoryResponse("카테고리 업데이트 완료", request.categoryIds()));
 	}
 
 	@GetMapping("/category/{id}")
 	public List<Category> getUserCategories(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable long id) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		return categoryService.getUserCategories(id);
 	}
@@ -61,7 +66,9 @@ public class CommonController {
 
 	@PostMapping("/like")
 	public ResponseEntity<LikeDto.LikeResponse> like(
+		@RequestHeader("X-User-ID") Long memberId,
 		@RequestBody LikeDto.LikeRequest request) {
+		HeaderUtil.validateUserId(request.likerId(), memberId);
 
 		Boolean isLike = likeService.getLike(request);
 

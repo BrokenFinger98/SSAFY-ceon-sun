@@ -57,9 +57,6 @@ public class MemberSpecification {
 				return criteriaBuilder.conjunction();
 			}
 
-			// 중복 결과 방지를 위해 DISTINCT 설정
-			query.distinct(true);
-
 			// 서브쿼리 생성: 해당 Member가 가진 카테고리 중 요청한 카테고리의 개수를 카운트
 			Subquery<Long> subquery = query.subquery(Long.class);
 			var mcRoot = subquery.from(MemberCategory.class);

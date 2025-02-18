@@ -1,14 +1,16 @@
-package com.chunsun.paymentservice.config;
+package com.chunsun.classservice.application.client;
 
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.chunsun.paymentservice.common.error.FeignErrorDecoder;
+import com.chunsun.classservice.common.error.FeignErrorDecoder;
 
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 
 @Configuration
+@EnableFeignClients
 public class FeignConfig {
 
 	@Bean

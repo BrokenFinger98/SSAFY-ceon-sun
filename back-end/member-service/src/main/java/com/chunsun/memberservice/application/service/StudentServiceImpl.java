@@ -2,8 +2,6 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +28,18 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	@Transactional
-	public StudentDto.CardResponse createCard(StudentDto.CreateCardRequest request) {
+	public StudentDto.CardResponse createCard(Long id, StudentDto.CreateCardRequest request) {
 
-		Member member = memberRepository.findById(request.id()).orElseThrow(()
+		Member member = memberRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
-		if(member.getRole() == Role.TEACHER) {
+		Role role = member.getRole();
+
+		if(role == Role.TEACHER) {
 			throw new BusinessException(GlobalErrorCodes.ALREADY_TEACHER);
+		}
+		if(role == Role.STUDENT) {
+			throw new BusinessException(GlobalErrorCodes.ALREADY_STUDENT);
 		}
 
 		member.updateRole(Role.STUDENT);
@@ -55,6 +58,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	@Transactional
 	public StudentDto.CardResponse updateCard(Long id, StudentDto.UpdateCardRequest request) {
+
 		Student student = studentRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.STUDENT_NOT_FOUND));
 
@@ -108,10 +112,8 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public StudentDto.GetListResponse getList() {
 
-		List<Long> studentIds = studentRepository.findAll().stream().map(Student::getId).collect(Collectors.toList());
-
 		return new StudentDto.GetListResponse(
-			studentIds
+			studentRepository.findAllStudentIds()
 		);
 	}
 }

@@ -27,8 +27,8 @@ public class JdbcRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	public void bulkInsert(List<BulkInsertCouponDto> coupons) {
-		String sql = "INSERT INTO member_coupon (coupon_id, member_id, status, expiry_date) VALUES (?, ?, ?, ?)";
+	public void bulkInsert(final List<BulkInsertCouponDto> coupons) {
+		final String sql = "INSERT INTO member_coupon (coupon_id, member_id, status, expiry_date) VALUES (?, ?, ?, ?)";
 
 		jdbcTemplate.batchUpdate(sql,
 			new BatchPreparedStatementSetter() {
@@ -48,19 +48,19 @@ public class JdbcRepository {
 			});
 	}
 
-	public void updateRemainingQuantities(List<BulkInsertCouponDto> bulkCoupons) {
-		Map<Long, Long> issuedCountByCouponId = bulkCoupons.stream()
+	public void updateRemainingQuantities(final List<BulkInsertCouponDto> bulkCoupons) {
+		final Map<Long, Long> issuedCountByCouponId = bulkCoupons.stream()
 			.collect(Collectors.groupingBy(BulkInsertCouponDto::couponId, Collectors.counting()));
 
 		if (issuedCountByCouponId.isEmpty()) {
 			return;
 		}
 
-		String sql = "UPDATE coupons " +
+		final String sql = "UPDATE coupons " +
 			"   SET remaining_quantity = remaining_quantity - ? " +
 			" WHERE id = ?";
 
-		List<Object[]> batchArgs = new ArrayList<>();
+		final List<Object[]> batchArgs = new ArrayList<>();
 		for (Map.Entry<Long, Long> entry : issuedCountByCouponId.entrySet()) {
 			batchArgs.add(new Object[] {entry.getValue().intValue(), entry.getKey()});
 		}

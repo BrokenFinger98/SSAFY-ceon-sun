@@ -42,7 +42,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(final ConstraintViolationException e) {
 		log.warn(e.getMessage(), e);
-		String errorMessage = e.getConstraintViolations().stream()
+		final String errorMessage = e.getConstraintViolations().stream()
 			.map(ConstraintViolation::getMessage)
 			.findFirst()
 			.orElseThrow(() -> new RuntimeException("메시지 추출 도중 에러 발생"));
@@ -51,14 +51,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(BusinessException.class)
-	protected ResponseEntity<ErrorResponseDto> handleBusinessException(BusinessException e) {
+	protected ResponseEntity<ErrorResponseDto> handleBusinessException(final BusinessException e) {
 		log.error("BusinessException", e);
-		ErrorCode errorMessage = e.getErrorCode();
+		final ErrorCode errorMessage = e.getErrorCode();
 		return ErrorResponseDto.of(errorMessage);
 	}
 
 	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<ErrorResponseDto> handleException(Exception e) {
+	protected ResponseEntity<ErrorResponseDto> handleException(final Exception e) {
 		log.error("Exception", e);
 		return ErrorResponseDto.of(GlobalErrorCodes.INTERNAL_SERVER_ERROR);
 	}

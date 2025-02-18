@@ -30,13 +30,18 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	@Transactional
-	public TeacherDto.CreateCardResponse createCard(TeacherDto.CreateCardRequest request) {
+	public TeacherDto.CreateCardResponse createCard(Long id, TeacherDto.CreateCardRequest request) {
 
-		Member member = memberRepository.findById(request.id()).orElseThrow(()
+		Member member = memberRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
-		if(member.getRole() == Role.STUDENT) {
+		Role role = member.getRole();
+
+		if(role == Role.STUDENT) {
 			throw new BusinessException(GlobalErrorCodes.ALREADY_STUDENT);
+		}
+		if(role == Role.TEACHER) {
+			throw new BusinessException(GlobalErrorCodes.ALREADY_TEACHER);
 		}
 
 		member.updateRole(Role.TEACHER);
@@ -158,6 +163,6 @@ public class TeacherServiceImpl implements TeacherService {
 		Teacher teacher = teacherRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
 
-		return new TeacherDto.ClassFinishResponse(teacher.getTotalClassCount(), teacher.getTotalClassHours());
+		return new TeacherDto.ClassFinishResponse(teacher.getTotalClassCount(), teacher.getTotalClassHours()/60);
 	}
 }

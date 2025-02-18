@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.chunsun.memberservice.application.dto.MemberDto;
 import com.chunsun.memberservice.application.service.MemberService;
+import com.chunsun.memberservice.common.util.HeaderUtil;
 import com.chunsun.memberservice.config.feign.RankClient;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 
@@ -43,10 +45,11 @@ public class MemberController {
 
 	@PutMapping("/{id}")
 	public ResponseEntity<MemberDto.UpdateInfoResponse> updateMemberProfile(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id,
-		@RequestParam("nickname") String nickname,
-		@RequestPart(value = "profileImage", required = false) MultipartFile image
-		) {
+		@RequestPart(value = "nickname", required = false) String nickname,
+		@RequestPart(value = "profileImage", required = false) MultipartFile image) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		MemberDto.UpdateInfoRequest request = new MemberDto.UpdateInfoRequest(id, nickname, image);
 
@@ -57,7 +60,9 @@ public class MemberController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<MemberDto.GetInfoResponse> getMemberProfile(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		MemberDto.GetInfoResponse getInfo = memberService.getMemberInfo(id);
 
@@ -66,7 +71,9 @@ public class MemberController {
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteMember(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		memberService.deleteMember(id);
 
@@ -84,12 +91,14 @@ public class MemberController {
 
 	@GetMapping("/{id}/search")
 	public ResponseEntity<Page<MemberDto.MemberListItem>> searchMembers(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id,
 		@RequestParam(required = false) String category,
 		@RequestParam(required = false) String gender,
 		@RequestParam(required = false) String age,
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		Page<MemberDto.MemberListItem> result = memberService.getFilterMembers(category, gender, age, page, size, id);
 
@@ -132,5 +141,11 @@ public class MemberController {
 	public List<MemberDto.MemberListItem> getMemberList(@RequestParam List<Long> ids){
 
 		return memberService.getMembersInfo(ids);
+	}
+
+	@GetMapping("/role")
+	public String getRole(@RequestParam Long memberId){
+
+		return memberService.getRole(memberId).toLowerCase();
 	}
 }

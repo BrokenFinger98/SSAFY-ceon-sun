@@ -8,7 +8,6 @@ import com.chunsun.memberservice.domain.Enum.Gender;
 
 public record TeacherDto() {
 	public record CreateCardRequest(
-		Long id,
 		String description,
 		String careerDescription,
 		String classProgress,

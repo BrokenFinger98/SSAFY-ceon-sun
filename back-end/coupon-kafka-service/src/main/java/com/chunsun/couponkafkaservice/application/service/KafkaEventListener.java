@@ -44,7 +44,7 @@ public class KafkaEventListener {
 		}
 	}
 
-	private static List<BulkInsertCouponDto> getBulkInsertCouponDtos(List<IssueCouponRecord> issueCouponRecords) {
+	private static List<BulkInsertCouponDto> getBulkInsertCouponDtos(final List<IssueCouponRecord> issueCouponRecords) {
 		return issueCouponRecords.stream()
 			.map(record -> new BulkInsertCouponDto(
 				record.couponId(),
@@ -54,7 +54,7 @@ public class KafkaEventListener {
 			.collect(Collectors.toList());
 	}
 
-	private List<IssueCouponRecord> getIssueCouponRecords(List<String> messages) {
+	private List<IssueCouponRecord> getIssueCouponRecords(final List<String> messages) {
 		return messages.stream().map(message -> {
 			try {
 				return objectMapper.readValue(message, IssueCouponRecord.class);

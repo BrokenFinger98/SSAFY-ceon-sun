@@ -5,7 +5,7 @@ import com.chunsun.memberservice.application.dto.TeacherDto;
 
 public interface TeacherService {
 
-	TeacherDto.CreateCardResponse createCard(TeacherDto.CreateCardRequest request);
+	TeacherDto.CreateCardResponse createCard(Long memberId, TeacherDto.CreateCardRequest request);
 
 	TeacherDto.UpdateCardResponse updateCard(Long id, TeacherDto.UpdateCardRequest request);
 

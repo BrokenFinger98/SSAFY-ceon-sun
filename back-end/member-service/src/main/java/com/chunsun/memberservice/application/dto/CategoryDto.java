@@ -5,7 +5,6 @@ import java.util.List;
 public record CategoryDto() {
 
 	public record CategoryRequest(
-		Long id,
 		List<Long> categoryIds
 	){
 	}
@@ -15,5 +14,4 @@ public record CategoryDto() {
 		List<Long> categoryIds
 	){
 	}
-
 }

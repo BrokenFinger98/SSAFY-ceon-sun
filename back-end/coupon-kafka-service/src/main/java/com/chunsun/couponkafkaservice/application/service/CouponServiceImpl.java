@@ -4,6 +4,7 @@ import static com.chunsun.couponkafkaservice.application.convert.CouponConverter
 import static com.chunsun.couponkafkaservice.application.convert.CouponConverter.toCreateCouponServiceResponse;
 import static com.chunsun.couponkafkaservice.application.dto.ServiceDto.*;
 import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_COUPON_DELETE_REQUEST;
+import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_COUPON_STATUS_UPDATE_REQUEST;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import com.chunsun.couponkafkaservice.domain.MemberCouponRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CouponServiceImpl implements CouponService {
@@ -29,6 +30,7 @@ public class CouponServiceImpl implements CouponService {
 	private final CouponRepository couponRepository;
 	private final MemberCouponRepository memberCouponRepository;
 
+	@Transactional
 	@Override
 	public CreateCouponServiceResponse createCoupon(final CreateCouponServiceRequest request) {
 		final Coupon coupon = toCoupon(request);
@@ -36,6 +38,7 @@ public class CouponServiceImpl implements CouponService {
 		return toCreateCouponServiceResponse(coupon);
 	}
 
+	@Transactional
 	@Override
 	public void deleteCoupon(final Long couponId) {
 		final Coupon coupon = couponRepository.findById(couponId)
@@ -43,6 +46,7 @@ public class CouponServiceImpl implements CouponService {
 		couponRepository.delete(coupon);
 	}
 
+	@Transactional
 	@Override
 	public SearchCouponsServiceResponse searchCoupons(final Long memberId) {
 		final List<MemberCoupon> memberCoupons = memberCouponRepository
@@ -66,4 +70,11 @@ public class CouponServiceImpl implements CouponService {
 		return new SearchCouponsServiceResponse(couponResponses);
 	}
 
+	@Transactional
+	@Override
+	public void updateCouponStatus(final UpdateCouponStatusServiceRequest request) {
+		final MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCoupon_Id(request.memberId(),
+			request.couponId()).orElseThrow(() -> new BusinessException(INVALID_COUPON_STATUS_UPDATE_REQUEST));
+		memberCoupon.changeStatusToExpired();
+	}
 }

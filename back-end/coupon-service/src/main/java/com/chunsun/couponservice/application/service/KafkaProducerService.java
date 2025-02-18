@@ -4,5 +4,5 @@ import com.chunsun.couponservice.application.dto.IssueCouponRecord;
 
 public interface KafkaProducerService {
 
-	void sendCouponIssuedEvent(IssueCouponRecord issueCouponRecord);
+	void sendCouponIssuedEvent(final IssueCouponRecord issueCouponRecord);
 }

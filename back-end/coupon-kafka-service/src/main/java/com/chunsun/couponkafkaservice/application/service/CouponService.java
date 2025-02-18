@@ -4,9 +4,11 @@ import static com.chunsun.couponkafkaservice.application.dto.ServiceDto.*;
 
 public interface CouponService {
 
-	CreateCouponServiceResponse createCoupon(CreateCouponServiceRequest request);
+	CreateCouponServiceResponse createCoupon(final CreateCouponServiceRequest request);
 
-	void deleteCoupon(Long couponId);
+	void deleteCoupon(final Long couponId);
 
-	SearchCouponsServiceResponse searchCoupons(Long memberId);
+	SearchCouponsServiceResponse searchCoupons(final Long memberId);
+
+	void updateCouponStatus(final UpdateCouponStatusServiceRequest request);
 }

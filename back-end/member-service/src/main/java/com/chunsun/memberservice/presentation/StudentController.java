@@ -6,11 +6,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.memberservice.application.dto.StudentDto;
 import com.chunsun.memberservice.application.service.StudentService;
+import com.chunsun.memberservice.common.util.HeaderUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,16 +25,19 @@ public class StudentController {
 
 	@PostMapping
 	public ResponseEntity<StudentDto.CardResponse> addCard(
+		@RequestHeader("X-User-ID") Long memberId,
 		@RequestBody StudentDto.CreateCardRequest request) {
 
-		StudentDto.CardResponse response = studentService.createCard(request);
+		StudentDto.CardResponse response = studentService.createCard(memberId, request);
 		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<StudentDto.CardResponse> updateCard(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id,
 		@RequestBody StudentDto.UpdateCardRequest request) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		StudentDto.CardResponse response = studentService.updateCard(id, request);
 		return ResponseEntity.ok(response);
@@ -40,7 +45,9 @@ public class StudentController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<StudentDto.GetCardResponse> getCard(
+		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id) {
+		HeaderUtil.validateUserId(id, memberId);
 
 		StudentDto.GetCardResponse response = studentService.getCard(id);
 		return ResponseEntity.ok(response);

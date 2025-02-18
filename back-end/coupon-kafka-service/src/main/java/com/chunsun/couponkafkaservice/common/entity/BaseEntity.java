@@ -18,19 +18,14 @@ import lombok.Getter;
 public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(name = "created_at",
-        nullable = false,
-        columnDefinition = "datetime NOT NULL DEFAULT CURRENT_TIMESTAMP")
+    @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at",
-        nullable = false,
-        columnDefinition = "datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at",
-        columnDefinition = "datetime DEFAULT NULL")
+    @Column
     private LocalDateTime deletedAt;
 
     @PreRemove

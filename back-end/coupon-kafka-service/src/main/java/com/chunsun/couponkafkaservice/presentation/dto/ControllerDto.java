@@ -29,6 +29,14 @@ public record ControllerDto() {
 	) {
 	}
 
+	public record UpdateCouponStatusControllerRequest(
+		@NotNull
+		Long memberId,
+
+		@NotNull
+		Long couponId
+	){}
+
 	public record CreateCouponControllerResponse(
 		Long couponId,
 		String name,

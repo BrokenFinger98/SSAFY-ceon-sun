@@ -16,3 +16,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+
+  kafka:
+    bootstrap-servers: kafka1:9092, kafka2:9092, kafka3:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      delivery.timeout.ms: 3000
+      acks: all
+      properties:
+        spring.json.add.type.headers: false

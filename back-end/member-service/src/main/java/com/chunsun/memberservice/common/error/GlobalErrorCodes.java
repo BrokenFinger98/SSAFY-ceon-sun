@@ -52,6 +52,9 @@ public enum GlobalErrorCodes implements ErrorCode {
     ALREADY_STUDENT(HttpStatus.CONFLICT, "STUDENT4091", "이미 학생 카드를 생성했습니다."),
     NOT_STUDENT(HttpStatus.FORBIDDEN, "STUDENT4031", "STUDENT 외 이 기능을 사용할 수 없습니다."),
 
+
+    INVALID_USER_HEADER_ID(HttpStatus.BAD_REQUEST, "MEMBER4032", "잘못된 유저 ID 입니다."),
+
     ;
 
     private final HttpStatus httpStatus;

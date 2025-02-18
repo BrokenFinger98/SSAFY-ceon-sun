@@ -8,20 +8,19 @@ import org.springframework.stereotype.Service;
 
 import com.chunsun.couponservice.application.client.CouponKafkaClient;
 import com.chunsun.couponservice.application.client.NotificationClient;
+import com.chunsun.couponservice.application.dto.NotificationRequestDto;
 import com.chunsun.couponservice.common.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
 public class CouponServiceImpl implements CouponService {
 
 	private final CouponKafkaClient couponKafkaClient;
-	// private final NotificationClient notificationClient;
+	private final NotificationClient notificationClient;
 	private final RedisService redisService;
 	private final KafkaProducerService kafkaProducerService;
-
 
 	@Override
 	public CreateCouponServiceResponse createCoupon(final CreateCouponServiceRequest request) {
@@ -34,9 +33,14 @@ public class CouponServiceImpl implements CouponService {
 			couponKafkaClient.cancelCoupon(response.couponId());
 			throw e;
 		}
-		// TODO: 알림 전송 개발 해야함
-		// notificationClient.sendNotification(new NotificationRequestDto());
+		notificationClient.sendNotification(makeMessage(request));
 		return response;
+	}
+
+	private NotificationRequestDto makeMessage(final CreateCouponServiceRequest request) {
+		return new NotificationRequestDto(
+			String.format("%s의 할인률을 가진 %s가 %s개 발급 가능합니다.", request.discountRate(), request.name(),
+				request.totalQuantity()));
 	}
 
 	@Override
