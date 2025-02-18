@@ -146,7 +146,7 @@ public class SecurityConfig {
 		config.setAllowedOriginPatterns(List.of("*"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		config.setExposedHeaders(List.of("Authorization", "X-User-ID"));
+		config.setExposedHeaders(List.of("Authorization", "X-Chunsun-Authorization", "X-User-ID"));
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);

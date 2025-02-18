@@ -66,7 +66,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
 		// 상대방 ID 수집
 		List<Long> partnerIds = chatRooms.stream()
-			.map(chatRoom -> role.equals("GUEST") ? chatRoom.getTeacherId() : chatRoom.getStudentId())
+			.map(chatRoom -> role.equals("STUDENT") ? chatRoom.getTeacherId() : chatRoom.getStudentId())
 			.distinct()
 			.toList();
 

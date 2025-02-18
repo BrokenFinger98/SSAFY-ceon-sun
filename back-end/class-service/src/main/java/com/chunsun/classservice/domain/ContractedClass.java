@@ -45,18 +45,18 @@ public class ContractedClass extends BaseEntity {
 		this.status = PROGRESS;
 	}
 
-	public void UpdateRemainClass(Integer count){
+	public void updateRemainClass(Integer count){
 		this.remainClass += count;
 		this.status = PROGRESS;
 	}
 
-	public void DecreaseRemainClass(){
+	public void decreaseRemainClass(){
 		if(remainClass > 0){
 			this.remainClass--;
 		}
 	}
 
-	public void EndContractedClass(){
+	public void endContractedClass(){
 		this.status = END;
 	}
 }

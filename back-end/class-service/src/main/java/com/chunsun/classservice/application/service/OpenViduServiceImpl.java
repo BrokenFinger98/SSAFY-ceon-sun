@@ -81,7 +81,7 @@ public class OpenViduServiceImpl implements OpenViduService {
 			}
 		} else {
 			lessonRecord.calculateLessonTime();
-			contractedClass.DecreaseRemainClass();
+			contractedClass.decreaseRemainClass();
 			int lessonMinutes = (int) ChronoUnit.MINUTES.between(LocalTime.MIDNIGHT, lessonRecord.getLessonTime());
 			memberClient.classCountUpdate(contractedClass.getTeacherId(), new ClassFinishRequest(lessonMinutes));
 			rankClient.incrementTeacherClassCount(contractedClass.getTeacherId());

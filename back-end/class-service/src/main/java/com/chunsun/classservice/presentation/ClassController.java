@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chunsun.classservice.application.service.ClassService;
+import com.chunsun.classservice.common.resolver.UserId;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -70,5 +72,14 @@ public class ClassController {
 		@PathVariable(name = "contractedClassId") final Long contractedClassId,
 		@PageableDefault(size = 10) Pageable pageable){
 		return ResponseEntity.ok(classService.searchLessonRecords(contractedClassId, pageable));
+	}
+
+	@UserId
+	@PatchMapping("/status/{contractedClassId}")
+	public ResponseEntity<Void> updateStatus(
+		@UserId final Long teacherId,
+		@PathVariable(name = "contractedClassId") final Long contractedClassId) {
+		classService.updateStatus(teacherId, contractedClassId);
+		return ResponseEntity.noContent().build();
 	}
 }

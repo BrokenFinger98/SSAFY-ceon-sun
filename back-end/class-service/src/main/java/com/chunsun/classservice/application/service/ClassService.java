@@ -20,4 +20,6 @@ public interface ClassService {
 	List<GetTeacherIdsResponse> getTeacherIds(final List<Long> contractedClassIds);
 
 	Page<SearchLessonRecordResponse> searchLessonRecords(final Long contractedClassId, final Pageable pageable);
+
+	void updateStatus(final Long teacherId, final Long contractedClassId);
 }

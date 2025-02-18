@@ -75,7 +75,7 @@ public class ClassServiceImpl implements ClassService {
 		final ContractedClass contractedClass = contractedClassRepository.findById(contractedClassId)
 			.orElseThrow(() -> new BusinessException(CONTRACTED_CLASS_NOT_FOUND));
 
-		contractedClass.UpdateRemainClass(remainClass);
+		contractedClass.updateRemainClass(remainClass);
 
 		return new UpdateRemainClassResponse(
 			contractedClass.getStudentId(), contractedClass.getTeacherId(), contractedClass.getRemainClass());
@@ -106,6 +106,17 @@ public class ClassServiceImpl implements ClassService {
 			.toList();
 
 		return new PageImpl<>(responses, pageable, lessonRecordPage.getTotalElements());
+	}
+
+	@Transactional
+	@Override
+	public void updateStatus(final Long teacherId, final Long contractedClassId) {
+		final ContractedClass contractedClass = contractedClassRepository.findById(contractedClassId)
+			.orElseThrow(() -> new BusinessException(CONTRACTED_CLASS_NOT_FOUND));
+		if(!contractedClass.getTeacherId().equals(teacherId)) {
+			throw new BusinessException(INVALID_AUTHORITY);
+		}
+		contractedClass.endContractedClass();
 	}
 
 	private static Pageable getSortedPageable(final Pageable pageable) {
