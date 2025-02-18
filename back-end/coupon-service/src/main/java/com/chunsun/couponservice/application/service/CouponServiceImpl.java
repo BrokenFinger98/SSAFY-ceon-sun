@@ -39,8 +39,8 @@ public class CouponServiceImpl implements CouponService {
 
 	private NotificationRequestDto makeMessage(final CreateCouponServiceRequest request) {
 		return new NotificationRequestDto(
-			String.format("%s%의 할인률을 가진 %s이 %s개 발급 가능합니다.", request.discountRate(), request.name(),
-				request.totalQuantity()));
+			String.format("%s%%의 할인율을 가진 %s이 %s개 발급 가능합니다.",
+				request.discountRate(), request.name(), request.totalQuantity()));
 	}
 
 	@Override

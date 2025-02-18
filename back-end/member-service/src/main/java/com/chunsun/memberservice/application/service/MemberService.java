@@ -26,7 +26,7 @@ public interface MemberService {
 
 	List<MemberDto.MemberNickNameDto> getUserNicknames(List<Long> ids);
 
-	List<MemberDto.MemberListItem> getMembersInfo(List<Long> ids);
+	List<MemberDto.MemberPaymentDto> getMembersInfo(List<Long> ids);
 
 	String getRole(Long id);
 }

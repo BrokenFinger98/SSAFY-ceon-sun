@@ -317,25 +317,27 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDto.MemberListItem> getMembersInfo(List<Long> ids) {
+	public List<MemberDto.MemberPaymentDto> getMembersInfo(List<Long> ids) {
 
-		List<MemberDto.MemberListItem> members = new ArrayList<>();
+		List<MemberDto.MemberPaymentDto> members = new ArrayList<>();
 		for(Long id : ids) {
 			Member member = memberRepository.findById(id).
 				orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
 			Integer age = Period.between(member.getBirthdate(), LocalDate.now()).getYears();
 
-			List<Category> memberCategories = memberCategoryRepository.findByMember(member).stream()
+			List<String> memberCategories = memberCategoryRepository.findByMember(member).stream()
 				.map(MemberCategory::getCategory)
+				.map(Category::getName)
 				.collect(Collectors.toList());
 
-			MemberDto.MemberListItem item = new MemberDto.MemberListItem(
+
+			MemberDto.MemberPaymentDto item = new MemberDto.MemberPaymentDto(
 				member.getId(),
-				member.getProfileImage(),
 				member.getNickname(),
+				member.getGender().toString(),
 				age,
-				member.getGender(),
+				member.getProfileImage(),
 				memberCategories
 			);
 			members.add(item);

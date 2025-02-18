@@ -33,8 +33,7 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 
 	private static final String[] PUBLIC_PATHS = {
-		"/", "favicon.ico", "/actuator/**", "/auth-service/**",
-		"/config-service/**", "/discovery-service/**"
+		"/", "favicon.ico", "/auth-service/**", "/discovery-service/**"
 	};
 
 	/*
@@ -105,7 +104,7 @@ public class SecurityConfig {
 				.pathMatchers(HttpMethod.POST, "/class-service/class-requests")
 				.hasAnyRole(Role.STUDENT, Role.ADMIN)
 
-				.pathMatchers(HttpMethod.POST, "/class-service/class-requests/response")
+				.pathMatchers(HttpMethod.POST, "/class-service/class-requests/response", "/class-service/class/status/*")
 				.hasAnyRole(Role.TEACHER, Role.ADMIN)
 
 				.pathMatchers("/notification-service/coupons/send/all")
