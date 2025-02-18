@@ -16,7 +16,7 @@ CREATE TABLE members (
 );
 
 CREATE TABLE teachers (
-    id                   BIGINT UNSIGNED NOT NULL,
+    id                   BIGINT UNSIGNED PRIMARY KEY,
     description          TEXT DEFAULT NULL,
     career_description   TEXT DEFAULT NULL,
     class_contents       TEXT DEFAULT NULL,
@@ -34,11 +34,10 @@ CREATE TABLE teachers (
 );
 
 CREATE TABLE students (
-    id          BIGINT UNSIGNED NOT NULL,
+    id          BIGINT UNSIGNED PRIMARY KEY,
     is_exposed  BOOLEAN NOT NULL DEFAULT TRUE,
-    description TEXT DEFAULT NULL
+    description TEXT    DEFAULT NULL
 );
-
 
 CREATE TABLE category (
     id   BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -53,7 +52,6 @@ CREATE TABLE member_category (
 
 CREATE TABLE likes (
     id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    liker_id   BIGINT UNSIGNED NOT NULL,
-    likee_id   BIGINT UNSIGNED NOT NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    liker      BIGINT UNSIGNED NOT NULL,
+    likee      BIGINT UNSIGNED NOT NULL
 );
