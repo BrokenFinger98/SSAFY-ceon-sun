@@ -72,6 +72,9 @@ public class SecurityConfig {
 					"/member-service/teachers/details/*")
 				.hasAnyRole(Role.STUDENT, Role.ADMIN)
 
+				.pathMatchers("/coupon-service/coupons/admin")
+				.hasAnyRole(Role.ADMIN)
+
 				.pathMatchers(HttpMethod.GET, "/member-service/students/details/*")
 				.hasAnyRole(Role.TEACHER, Role.ADMIN)
 
