@@ -138,7 +138,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/payments")
-	public List<MemberDto.MemberListItem> getMemberList(@RequestParam List<Long> ids){
+	public List<MemberDto.MemberPaymentDto> getMemberList(@RequestParam List<Long> ids){
 
 		return memberService.getMembersInfo(ids);
 	}

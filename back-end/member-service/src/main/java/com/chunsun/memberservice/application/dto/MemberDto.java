@@ -75,4 +75,14 @@ public record MemberDto() {
 	){
 	}
 
+	public record MemberPaymentDto(
+		Long memberId,
+		String nickname,
+		String gender,
+		Integer age,
+		String profileImageUrl,
+		List<String> categories
+	){
+	}
+
 }
