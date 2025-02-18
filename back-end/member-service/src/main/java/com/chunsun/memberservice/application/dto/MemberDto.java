@@ -8,14 +8,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.chunsun.memberservice.domain.Entity.Category;
 import com.chunsun.memberservice.domain.Enum.Gender;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 public record MemberDto() {
 
 	public record SignUpRequest(
+		@NotNull(message = "kakaoId가 없습니다.")
 		String kakaoId,
+		@Email(message = "Email 형식이 아닙니다.")
 		String email,
+		@NotNull(message = "name이 없습니다.")
 		String name,
+		@NotNull(message = "nickname이 없습니다.")
 		String nickname,
+		@NotNull(message = "birthdate이 없습니다.")
 		LocalDate birthdate,
+		@NotNull(message = "gender가 없습니다.")
 		Gender gender) {
 	}
 

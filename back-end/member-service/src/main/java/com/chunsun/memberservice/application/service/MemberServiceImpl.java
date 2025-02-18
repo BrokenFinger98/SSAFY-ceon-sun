@@ -31,7 +31,6 @@ import com.chunsun.memberservice.domain.Repository.MemberRepository;
 import com.chunsun.memberservice.domain.Enum.Role;
 import com.chunsun.memberservice.domain.Entity.Student;
 import com.chunsun.memberservice.domain.Repository.StudentRepository;
-import com.chunsun.memberservice.domain.MemberSpecification;
 import com.chunsun.memberservice.domain.Entity.Teacher;
 import com.chunsun.memberservice.domain.Repository.TeacherRepository;
 

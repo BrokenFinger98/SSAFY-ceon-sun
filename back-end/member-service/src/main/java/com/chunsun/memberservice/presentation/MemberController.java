@@ -1,8 +1,12 @@
 package com.chunsun.memberservice.presentation;
 
+import static com.chunsun.memberservice.application.dto.MemberDto.*;
+import static org.springframework.http.HttpStatus.*;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +27,7 @@ import com.chunsun.memberservice.common.util.HeaderUtil;
 import com.chunsun.memberservice.config.feign.RankClient;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,36 +40,33 @@ public class MemberController {
 	private final RankClient rankClient;
 
 	@PostMapping
-	public ResponseEntity<MemberDto.SignUpResponse> signUpMember(
-		@RequestBody MemberDto.SignUpRequest request) {
-
-		MemberDto.SignUpResponse response = memberService.signUp(request);
-
-		return ResponseEntity.ok(response);
+	public ResponseEntity<SignUpResponse> signUpMember(
+		@Valid @RequestBody final SignUpRequest request) {
+		return ResponseEntity.status(CREATED).body(memberService.signUp(request));
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<MemberDto.UpdateInfoResponse> updateMemberProfile(
+	public ResponseEntity<UpdateInfoResponse> updateMemberProfile(
 		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id,
 		@RequestPart(value = "nickname", required = false) String nickname,
 		@RequestPart(value = "profileImage", required = false) MultipartFile image) {
 		HeaderUtil.validateUserId(id, memberId);
 
-		MemberDto.UpdateInfoRequest request = new MemberDto.UpdateInfoRequest(id, nickname, image);
+		UpdateInfoRequest request = new UpdateInfoRequest(id, nickname, image);
 
-		MemberDto.UpdateInfoResponse updateInfo = memberService.updateMemberInfo(request);
+		UpdateInfoResponse updateInfo = memberService.updateMemberInfo(request);
 
 		return ResponseEntity.ok(updateInfo);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<MemberDto.GetInfoResponse> getMemberProfile(
+	public ResponseEntity<GetInfoResponse> getMemberProfile(
 		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id) {
 		HeaderUtil.validateUserId(id, memberId);
 
-		MemberDto.GetInfoResponse getInfo = memberService.getMemberInfo(id);
+		GetInfoResponse getInfo = memberService.getMemberInfo(id);
 
 		return ResponseEntity.ok(getInfo);
 	}
@@ -90,7 +92,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/{id}/search")
-	public ResponseEntity<Page<MemberDto.MemberListItem>> searchMembers(
+	public ResponseEntity<Page<MemberListItem>> searchMembers(
 		@RequestHeader("X-User-ID") Long memberId,
 		@PathVariable Long id,
 		@RequestParam(required = false) String category,
@@ -100,7 +102,7 @@ public class MemberController {
 		@RequestParam(defaultValue = "10") int size) {
 		HeaderUtil.validateUserId(id, memberId);
 
-		Page<MemberDto.MemberListItem> result = memberService.getFilterMembers(category, gender, age, page, size, id);
+		Page<MemberListItem> result = memberService.getFilterMembers(category, gender, age, page, size, id);
 
 		return ResponseEntity.ok(result);
 	}
@@ -120,25 +122,25 @@ public class MemberController {
 	}
 
 	@GetMapping("/ranking")
-	public ResponseEntity<List<MemberDto.TeacherListItem>> getTeacherRanking(){
+	public ResponseEntity<List<TeacherListItem>> getTeacherRanking(){
 
-		List<MemberDto.TeacherTupleDto> teachersRank = rankClient.getTeachersRank();
+		List<TeacherTupleDto> teachersRank = rankClient.getTeachersRank();
 
-		List<MemberDto.TeacherListItem> result = memberService.getTeachersRank(teachersRank);
+		List<TeacherListItem> result = memberService.getTeachersRank(teachersRank);
 
 		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("/nicknames")
-	public List<MemberDto.MemberNickNameDto> getUserNicknames(@RequestParam List<Long> ids){
+	public List<MemberNickNameDto> getUserNicknames(@RequestParam List<Long> ids){
 
-		List<MemberDto.MemberNickNameDto> nicknameList = memberService.getUserNicknames(ids);
+		List<MemberNickNameDto> nicknameList = memberService.getUserNicknames(ids);
 
 		return nicknameList;
 	}
 
 	@GetMapping("/payments")
-	public List<MemberDto.MemberPaymentDto> getMemberList(@RequestParam List<Long> memberIds){
+	public List<MemberPaymentDto> getMemberList(@RequestParam List<Long> memberIds){
 
 		return memberService.getMembersInfo(memberIds);
 	}

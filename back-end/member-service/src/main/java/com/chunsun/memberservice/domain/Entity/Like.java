@@ -1,16 +1,16 @@
 package com.chunsun.memberservice.domain.Entity;
 
-import java.time.LocalDateTime;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
-import org.springframework.data.annotation.CreatedDate;
-
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,23 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Like {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
-	private Long likerId;
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "liker", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	private Member liker;
 
-	private Long likeeId;
-
-	@CreatedDate
-	private LocalDateTime createdAt;
-
-	@Version
-	private Long version;
-
-	@Builder
-	public Like(Long likerId, Long likeeId) {
-		this.likerId = likerId;
-		this.likeeId = likeeId;
-		createdAt = LocalDateTime.now();
-	}
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "likee", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	private Member likee;
 }

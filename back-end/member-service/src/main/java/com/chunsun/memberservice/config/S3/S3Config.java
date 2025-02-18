@@ -1,4 +1,4 @@
-package com.chunsun.memberservice.config.database;
+package com.chunsun.memberservice.config.S3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

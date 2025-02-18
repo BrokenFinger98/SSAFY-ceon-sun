@@ -1,4 +1,4 @@
-package com.chunsun.memberservice.config.interceptor;
+package com.chunsun.memberservice.common.resolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -7,21 +7,21 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.chunsun.memberservice.config.interceptor.annotation.StudentId;
-
 @Component
-public class StudentIdArgumentResolver implements HandlerMethodArgumentResolver {
+public class UserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(StudentId.class);
+        return parameter.hasParameterAnnotation(UserId.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
-                                  ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(
+        final MethodParameter parameter,
+        final ModelAndViewContainer mavContainer,
+        final NativeWebRequest webRequest,
+        final WebDataBinderFactory binderFactory
+    ) {
         return webRequest.getAttribute("UserId", NativeWebRequest.SCOPE_REQUEST);
     }
 }

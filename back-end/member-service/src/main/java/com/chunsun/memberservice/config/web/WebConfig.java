@@ -7,28 +7,25 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.chunsun.memberservice.config.interceptor.StudentIdArgumentResolver;
-import com.chunsun.memberservice.config.interceptor.TeacherIdArgumentResolver;
-import com.chunsun.memberservice.config.interceptor.UserInterceptor;
+import com.chunsun.memberservice.common.resolver.UserIdArgumentResolver;
+import com.chunsun.memberservice.config.interceptor.UserIdInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
 @RequiredArgsConstructor
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final UserInterceptor userInterceptor;
-    private final StudentIdArgumentResolver studentIdArgumentResolver;
-    private final TeacherIdArgumentResolver teacherIdArgumentResolver;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(userInterceptor)
-                .addPathPatterns("/**");
-    }
+    private final UserIdArgumentResolver userIdArgumentResolver;
+    private final UserIdInterceptor userIdInterceptor;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(studentIdArgumentResolver);
-        resolvers.add(teacherIdArgumentResolver);
+        resolvers.add(userIdArgumentResolver);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userIdInterceptor).order(1);
     }
 }
