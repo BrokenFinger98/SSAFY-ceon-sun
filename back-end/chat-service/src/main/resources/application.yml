@@ -1,0 +1,39 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: chat-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/chat?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false
+    username: chunsun
+    password: sixman1!
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:29092,localhost:29093,localhost:29094
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer # ✅ JSON 직렬화
+      properties:
+        spring.json.add.type.headers: false # ✅ JSON 타입 헤더 추가 비활성화
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+token:
+  access_expiration_time: 3600000
+  refresh_expiration_time: 2592000000
+  expiration_time: 86400000
+  secret: "9f3a65f3-3a49-4463-9bf7-ea24a5317c8b"
