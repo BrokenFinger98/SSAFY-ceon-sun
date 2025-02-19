@@ -23,9 +23,5 @@ public interface MemberCategoryRepository extends JpaRepository<MemberCategory, 
 		"WHERE c.id IN (:categoryIds)", nativeQuery = true)
 	void insertMemberCategory(@Param("memberId") Long memberId, @Param("categoryIds") List<Long> categoryIds);
 
-	@Modifying
-	@Query("DELETE FROM MemberCategory mc WHERE mc.member.id = :memberId")
-	void deleteByMemberId(@Param("memberId") Long memberId);
-
-
+	void deleteByMemberId(Long memberId);
 }

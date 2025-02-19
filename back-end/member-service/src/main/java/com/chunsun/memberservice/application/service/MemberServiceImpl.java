@@ -1,5 +1,7 @@
 package com.chunsun.memberservice.application.service;
 
+import static com.chunsun.memberservice.application.dto.MemberDto.*;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -33,6 +35,7 @@ import com.chunsun.memberservice.domain.Entity.Student;
 import com.chunsun.memberservice.domain.Repository.StudentRepository;
 import com.chunsun.memberservice.domain.Entity.Teacher;
 import com.chunsun.memberservice.domain.Repository.TeacherRepository;
+import com.chunsun.memberservice.infrastructure.QueryDslRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
+	private final QueryDslRepository queryDslRepository;
 	private final MemberRepository memberRepository;
 	private final CategoryRepository categoryRepository;
 	private final StudentRepository studentRepository;
@@ -50,16 +54,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	@Transactional
-	public MemberDto.SignUpResponse signUp(MemberDto.SignUpRequest request) {
-
-		if(memberRepository.existsByKakaoIdOrEmail(request.kakaoId(), request.email())){
-			if(memberRepository.existsByEmail(request.email())) {
-				throw new BusinessException(GlobalErrorCodes.DUPLICATE_EMAIL);
-			}
-			throw new BusinessException(GlobalErrorCodes.DUPLICATE_KAKAO_ID);
-		}
-
-		Member member = Member.builder()
+	public SignUpResponse signUp(SignUpRequest request) {
+		memberRepository.save(Member.builder()
 			.kakaoId(request.kakaoId())
 			.email(request.email())
 			.name(request.name())
@@ -67,58 +63,38 @@ public class MemberServiceImpl implements MemberService {
 			.birthdate(request.birthdate())
 			.gender(request.gender())
 			.role(Role.GUEST)
-			.build();
-		memberRepository.save(member);
+			.build());
 
-		return new MemberDto.SignUpResponse("가입 완료");
+		return new SignUpResponse("가입 완료");
 	}
 
 	@Override
 	@Transactional
-	public void deleteMember(Long id) {
-
-		Member member = memberRepository.findById(id)
-			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
-
-		memberCategoryRepository.deleteByMemberId(member.getId());
-
-		if (member.getRole() == Role.STUDENT && member.getStudent() != null) {
-			Student student = studentRepository.findById(id)
-				.orElseThrow(() -> new BusinessException(GlobalErrorCodes.STUDENT_NOT_FOUND));
-			student.delete();
-		} else if (member.getRole() == Role.TEACHER && member.getTeacher() != null) {
-			Teacher teacher = teacherRepository.findById(id)
-				.orElseThrow(() -> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
-			teacher.delete();
-
-		}
-		member.delete();
-		memberRepository.save(member);
+	public void deleteMember(final Long memberId) {
+		memberRepository.deleteById(memberId);
+		memberCategoryRepository.deleteByMemberId(memberId);
 	}
 
 	@Override
 	public void checkNicknameAvailability(String nickname) {
-
-		if(memberRepository.existsByNickname(nickname)) {
+		if (memberRepository.existsByNickname(nickname)) {
 			throw new BusinessException(GlobalErrorCodes.DUPLICATE_NICKNAME);
 		}
 	}
 
 	@Override
 	@Transactional
-	public MemberDto.UpdateInfoResponse updateMemberInfo(MemberDto.UpdateInfoRequest request) {
-
-		Member member = memberRepository.findById(request.id())
+	public void updateMemberInfo(final UpdateInfoRequest request) {
+		final Member member = memberRepository.findById(request.id())
 			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
 		String profile = member.getProfileImage();
 
 		if (request.profileImage() != null && !request.profileImage().isEmpty()) {
 			try {
-				if(profile!=null && !profile.isEmpty()) {
+				if (profile != null && !profile.isEmpty()) {
 					s3Service.deleteImage(profile);
 				}
-
 				profile = s3Service.uploadImage(request.profileImage());
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -128,23 +104,15 @@ public class MemberServiceImpl implements MemberService {
 			profile = "";
 		}
 
-		member.updateInfo(
-			request.nickname(),
-			profile
-		);
-
-		memberRepository.save(member);
-
-		return new MemberDto.UpdateInfoResponse();
+		member.updateInfo(request.nickname(), profile);
 	}
 
 	@Override
-	public MemberDto.GetInfoResponse getMemberInfo(Long id) {
-
-		Member member = memberRepository.findById(id)
+	public GetInfoResponse getMemberInfo(final Long id) {
+		final Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
-		return new MemberDto.GetInfoResponse(
+		return new GetInfoResponse(
 			member.getName(),
 			member.getNickname(),
 			member.getEmail(),
@@ -164,101 +132,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Page<MemberDto.MemberListItem> getFilterMembers(
-		String category, String gender, String age, int page, int size, Long userId) {
-
-		Member requestingUser = memberRepository.findById(userId)
-			.orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
-
-		Role requesterRole = requestingUser.getRole();
-		Role searchTargetRole = Role.GUEST;
-
-		// 요청자가 Teacher이면 Student 목록을, Student이면 Teacher 목록을 검색
-		if (requesterRole == Role.TEACHER) {
-			searchTargetRole = Role.STUDENT;
-		} else if (requesterRole == Role.STUDENT) {
-			searchTargetRole = Role.TEACHER;
-		} else {
-			throw new BusinessException(GlobalErrorCodes.GUEST_NOT_ALLOWED);
-		}
-
-		// 기본 조건: 검색 대상 Role로 필터 (요청자의 반대 Role)
-		Specification<Member> spec = Specification.where(MemberSpecification.memberIdEquals(searchTargetRole));
-
-		// 만약 검색 대상이 STUDENT라면 isExposed 필터 추가 (true인 경우만)
-		if (searchTargetRole == Role.STUDENT) {
-			spec = spec.and(MemberSpecification.isExposedTrue());
-		}
-
-		// 성별 필터 (MALE 또는 FEMALE)
-		if (gender != null && !gender.isEmpty()) {
-			try {
-				Gender genderEnum = Gender.valueOf(gender.toUpperCase());
-				spec = spec.and(MemberSpecification.hasGender(genderEnum));
-			} catch (IllegalArgumentException e) {
-				throw new BusinessException(GlobalErrorCodes.INVALID_GENDER);
-			}
-		}
-
-		// 연령대 필터 (예: "20-40")
-		if (age != null && age.contains("-")) {
-			String[] ageParts = age.split("-");
-
-			try{
-				Integer lowerAge = Integer.parseInt(ageParts[0]);
-				Integer upperAge = Integer.parseInt(ageParts[1]);
-
-				if (lowerAge > upperAge) {
-					throw new BusinessException(GlobalErrorCodes.INVALID_AGE_RANGE);
-				}
-
-				spec = spec.and(MemberSpecification.hasAgeBetween(lowerAge, upperAge));
-
-			} catch (NumberFormatException e) {
-				throw new BusinessException(GlobalErrorCodes.INVALID_AGE_FORMAT);
-			}
-		}
-
-		// 카테고리 필터(AND 조건)
-		if (category != null && !category.isEmpty() && !category.equalsIgnoreCase("none")) {
-			String[] categoryNames = category.split(",");
-			List<Category> categories = Arrays.stream(categoryNames)
-				.map(name -> categoryRepository.findByNameIgnoreCase(name)
-					.orElseThrow(() -> new BusinessException(GlobalErrorCodes.CATEGORY_NOT_FOUND)))
-				.collect(Collectors.toList());
-			spec = spec.and(MemberSpecification.hasAllCategories(categories));
-		}
-
-		Pageable pageable = PageRequest.of(page, size);
-
-		if (searchTargetRole == Role.STUDENT) {
-			// Student 테이블의 updatedAt 기준 내림차순
-			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "student.updatedAt"));
-		} else {
-			// Teacher 테이블의 updatedAt 기준 내림차순
-			pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "teacher.updatedAt"));
-		}
-
-		Page<Member> resultPage = memberRepository.findAll(spec, pageable);
-
-		List<MemberDto.MemberListItem> dtoList = resultPage.getContent().stream().map(member -> {
-			Long memberId = member.getId();
-			String profileImage = member.getProfileImage();
-			String nickname = member.getNickname();
-			Integer memberAge = Period.between(member.getBirthdate(), LocalDate.now()).getYears();
-			Gender memberGender = member.getGender();
-
-			List<Category> memberCategories = memberCategoryRepository.findByMember(member).stream()
-				.map(MemberCategory::getCategory)
-				.collect(Collectors.toList());
-			return new MemberDto.MemberListItem(memberId, profileImage, nickname, memberAge, memberGender, memberCategories);
-		}).collect(Collectors.toList());
-
-		return new PageImpl<>(dtoList, pageable, resultPage.getTotalElements());
-	}
-
-	@Override
-	public List<MemberDto.TeacherListItem> getTeachersRank(List<MemberDto.TeacherTupleDto> teachersRank) {
+	public List<TeacherListItem> getTeachersRank(List<TeacherTupleDto> teachersRank) {
 
 		List<Long> ids = teachersRank.stream()
 			.map(dto -> Long.parseLong(dto.value()))
@@ -269,9 +143,9 @@ public class MemberServiceImpl implements MemberService {
 		Map<Long, Member> teacherMap = teachers.stream()
 			.collect(Collectors.toMap(Member::getId, t -> t));
 
-		List<MemberDto.TeacherListItem> rankedTeachers = new ArrayList<>();
+		List<TeacherListItem> rankedTeachers = new ArrayList<>();
 
-		for (MemberDto.TeacherTupleDto rankInfo : teachersRank) {
+		for (TeacherTupleDto rankInfo : teachersRank) {
 			Long teacherId = Long.parseLong(rankInfo.value());
 			Member teacher = teacherMap.get(teacherId);
 
@@ -282,7 +156,7 @@ public class MemberServiceImpl implements MemberService {
 
 				Integer age = Period.between(teacher.getBirthdate(), LocalDate.now()).getYears();
 
-				MemberDto.TeacherListItem item = new MemberDto.TeacherListItem(
+				TeacherListItem item = new TeacherListItem(
 					teacher.getId(),
 					teacher.getProfileImage(),
 					teacher.getNickname(),
@@ -298,14 +172,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDto.MemberNickNameDto> getUserNicknames(List<Long> ids) {
+	public List<MemberNickNameDto> getUserNicknames(List<Long> ids) {
 
-		List<MemberDto.MemberNickNameDto> nicknames = new ArrayList<>();
+		List<MemberNickNameDto> nicknames = new ArrayList<>();
 		for (Long id : ids) {
 			Member member = memberRepository.findById(id).
 				orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
-			MemberDto.MemberNickNameDto nickname = new MemberDto.MemberNickNameDto(
+			MemberNickNameDto nickname = new MemberNickNameDto(
 				member.getId(),
 				member.getNickname(),
 				member.getProfileImage()
@@ -316,37 +190,29 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberDto.MemberPaymentDto> getMembersInfo(List<Long> ids) {
+	public List<MemberPaymentDto> getMembersInfo(List<Long> memberIds) {
 
-		List<MemberDto.MemberPaymentDto> members = new ArrayList<>();
-		for(Long id : ids) {
-			Member member = memberRepository.findById(id).
-				orElseThrow(() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
-
-			Integer age = Period.between(member.getBirthdate(), LocalDate.now()).getYears();
-
-			List<String> memberCategories = memberCategoryRepository.findByMember(member).stream()
-				.map(MemberCategory::getCategory)
-				.map(Category::getName)
-				.collect(Collectors.toList());
-
-
-			MemberDto.MemberPaymentDto item = new MemberDto.MemberPaymentDto(
-				member.getId(),
-				member.getNickname(),
-				member.getGender().toString(),
-				age,
-				member.getProfileImage(),
-				memberCategories
-			);
-			members.add(item);
-		}
-		return members;
 	}
 
 	@Override
 	public String getRole(Long id) {
-
 		return memberRepository.findRoleById(id).toString();
+	}
+
+	@Override
+	public Page<SearchMemberResponse> searchMembers(final Long memberId, final List<Long> categories,
+		final String genderString, final Integer startAge, final Integer endAge, final Pageable pageable) {
+
+		final Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+			Sort.by("createdAt").descending());
+
+		final Gender gender;
+		if(genderString.equalsIgnoreCase(Gender.MALE.toString())) {
+			gender = Gender.MALE;
+		}else if(genderString.equalsIgnoreCase(Gender.FEMALE.toString())) {
+			gender = Gender.FEMALE;
+		}else throw new BusinessException(GlobalErrorCodes.INVALID_GENDER);
+
+		return queryDslRepository.searchMembers(memberId, categories, gender, startAge, endAge, sortedPageable);
 	}
 }

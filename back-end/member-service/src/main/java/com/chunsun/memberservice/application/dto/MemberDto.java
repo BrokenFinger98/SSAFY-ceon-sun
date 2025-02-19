@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chunsun.memberservice.application.dto.CategoryDto.CategoryName;
 import com.chunsun.memberservice.domain.Entity.Category;
 import com.chunsun.memberservice.domain.Enum.Gender;
 
@@ -39,9 +40,6 @@ public record MemberDto() {
 	) {
 	}
 
-	public record UpdateInfoResponse() {
-	}
-
 	public record GetInfoResponse(
 		String name,
 		String nickname,
@@ -52,13 +50,13 @@ public record MemberDto() {
 	) {
 	}
 
-	public record MemberListItem(
-		Long id,
+	public record SearchMemberResponse(
+		Long memberId,
 		String profileImage,
 		String nickname,
 		Integer age,
 		Gender gender,
-		List<Category> categories){
+		List<CategoryName> categories){
 	}
 
 	public record TeacherTupleDto(

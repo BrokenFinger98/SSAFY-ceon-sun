@@ -1,32 +1,41 @@
 package com.chunsun.memberservice.application.service;
 
+import static com.chunsun.memberservice.application.dto.MemberDto.*;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.chunsun.memberservice.application.dto.MemberDto;
 
 public interface MemberService {
 
-	MemberDto.SignUpResponse signUp(MemberDto.SignUpRequest request);
+	SignUpResponse signUp(final SignUpRequest request);
 
-	MemberDto.UpdateInfoResponse updateMemberInfo(MemberDto.UpdateInfoRequest request);
+	void updateMemberInfo(final UpdateInfoRequest request);
 
-	MemberDto.GetInfoResponse getMemberInfo(Long id);
+	GetInfoResponse getMemberInfo(final Long id);
 
-	void deleteMember(Long id);
+	void deleteMember(final Long id);
 
 	void checkNicknameAvailability(String nickname);
 
 	Boolean isDeleted(Long memberId);
 
-	Page<MemberDto.MemberListItem> getFilterMembers(String category, String gender, String age, int page, int size, Long userId);
+	List<TeacherListItem> getTeachersRank(List<TeacherTupleDto> teachersRank);
 
-	List<MemberDto.TeacherListItem> getTeachersRank(List<MemberDto.TeacherTupleDto> teachersRank);
+	List<MemberNickNameDto> getUserNicknames(List<Long> ids);
 
-	List<MemberDto.MemberNickNameDto> getUserNicknames(List<Long> ids);
-
-	List<MemberDto.MemberPaymentDto> getMembersInfo(List<Long> ids);
+	List<MemberPaymentDto> getMembersInfo(List<Long> memberIds);
 
 	String getRole(Long id);
+
+	Page<SearchMemberResponse> searchMembers(
+		final Long memberId,
+		final List<Long> categories,
+		final String gender,
+		final Integer startAge,
+		final Integer endAge,
+		final Pageable pageable);
 }

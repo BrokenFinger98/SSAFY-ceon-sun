@@ -14,4 +14,8 @@ public record CategoryDto() {
 		List<Long> categoryIds
 	){
 	}
+
+	public record CategoryName(
+		String name
+	){}
 }

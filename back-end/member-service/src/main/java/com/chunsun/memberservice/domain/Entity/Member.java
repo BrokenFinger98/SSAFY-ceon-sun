@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -57,4 +58,22 @@ public class Member extends BaseEntity {
 	@Enumerated(STRING)
 	@Column(name = "role", nullable = false)
 	private Role role;
+
+	@Builder
+	public Member(Role role, LocalDate birthdate, String profileImage, String email, Gender gender, String nickname,
+		String name, String kakaoId) {
+		this.role = role;
+		this.birthdate = birthdate;
+		this.profileImage = profileImage;
+		this.email = email;
+		this.gender = gender;
+		this.nickname = nickname;
+		this.name = name;
+		this.kakaoId = kakaoId;
+	}
+
+	public void updateInfo(String nickname, String profile) {
+		this.nickname = nickname;
+		this.profileImage = profile;
+	}
 }
