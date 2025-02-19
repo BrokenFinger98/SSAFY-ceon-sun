@@ -5,6 +5,7 @@ import static com.chunsun.couponkafkaservice.application.convert.CouponConverter
 import static com.chunsun.couponkafkaservice.application.dto.ServiceDto.*;
 import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_COUPON_DELETE_REQUEST;
 import static com.chunsun.couponkafkaservice.common.error.CouponKafkaErrorCodes.INVALID_COUPON_STATUS_UPDATE_REQUEST;
+import static com.chunsun.couponkafkaservice.domain.CouponStatus.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,12 +51,12 @@ public class CouponServiceImpl implements CouponService {
 	@Override
 	public SearchCouponsServiceResponse searchCoupons(final Long memberId) {
 		final List<MemberCoupon> memberCoupons = memberCouponRepository
-			.findByMemberIdAndStatus(memberId, CouponStatus.UNUSED);
+			.findByMemberIdAndStatus(memberId, UNUSED);
 		final List<SearchCouponServiceResponse> couponResponses = new ArrayList<>();
 
 		for (final MemberCoupon memberCoupon : memberCoupons) {
 			if (memberCoupon.getExpiryDate().isBefore(LocalDateTime.now())) {
-				memberCoupon.changeStatusToExpired();
+				memberCoupon.changeStatus(EXPIRED);
 			} else {
 				couponResponses.add(new SearchCouponServiceResponse(
 					memberCoupon.getCoupon().getId(),
@@ -75,6 +76,6 @@ public class CouponServiceImpl implements CouponService {
 	public void updateCouponStatus(final UpdateCouponStatusServiceRequest request) {
 		final MemberCoupon memberCoupon = memberCouponRepository.findByMemberIdAndCoupon_Id(request.memberId(),
 			request.couponId()).orElseThrow(() -> new BusinessException(INVALID_COUPON_STATUS_UPDATE_REQUEST));
-		memberCoupon.changeStatusToExpired();
+		memberCoupon.changeStatus(USED);
 	}
 }
