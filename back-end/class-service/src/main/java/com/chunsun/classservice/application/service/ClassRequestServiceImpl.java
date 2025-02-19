@@ -92,27 +92,26 @@ public class ClassRequestServiceImpl implements ClassRequestService {
 	public boolean responseClassRequest(
 		final Long teacherId, final Long studentId, final Long classRequestId, final String status) {
 
-		final ClassRequest classRequest =
-			classRequestRepository.deleteByIdAndTeacherIdAndStudentId(classRequestId, teacherId, studentId)
-				.orElseThrow(() -> new BusinessException(INVALID_REQUEST));
+		classRequestRepository.deleteByIdAndTeacherIdAndStudentId(classRequestId, teacherId, studentId)
+			.orElseThrow(() -> new BusinessException(INVALID_REQUEST));
 
 		final Map<Long, MemberDto> memberMap = memberClient.getMemberInfo(
-				List.of(classRequest.getTeacherId(), classRequest.getStudentId()))
+				List.of(teacherId, studentId))
 			.stream()
 			.collect(Collectors.toMap(MemberDto::memberId, Function.identity()));
 
-		final MemberDto teacherInfo = memberMap.get(classRequest.getTeacherId());
-		final MemberDto studentInfo = memberMap.get(classRequest.getStudentId());
+		final MemberDto teacherInfo = memberMap.get(teacherId);
+		final MemberDto studentInfo = memberMap.get(studentId);
 
 		if ("accept".equalsIgnoreCase(status)) {
 			contractedClassRepository.save(
-				new ContractedClass(classRequest.getTeacherId(), classRequest.getStudentId()));
+				new ContractedClass(teacherId, studentId));
 			final String statusMessage = "수락";
-			sendNotification(classRequest, teacherInfo, studentInfo, statusMessage);
+			sendNotification(teacherInfo, studentInfo, statusMessage);
 			return true;
 		} else if ("reject".equalsIgnoreCase(status)) {
 			final String statusMessage = "거절";
-			sendNotification(classRequest, teacherInfo, studentInfo, statusMessage);
+			sendNotification(teacherInfo, studentInfo, statusMessage);
 			return false;
 		} else {
 			throw new BusinessException(INVALID_REQUEST);
@@ -120,15 +119,14 @@ public class ClassRequestServiceImpl implements ClassRequestService {
 	}
 
 	private void sendNotification(
-		final ClassRequest classRequest,
 		final MemberDto teacherInfo,
 		final MemberDto studentInfo,
 		final String status) {
 
 		notificationProducerService.sendNotification(
 			RequestDto.builder()
-				.sendUserId(classRequest.getStudentId().toString())
-				.targetUserId(classRequest.getTeacherId().toString())
+				.sendUserId(teacherInfo.memberId().toString())
+				.targetUserId(studentInfo.memberId().toString())
 				.type("CLASS")
 				.message(String.format("%s 선생님이 %s 회원님의 과외 신청을 %s하셨습니다.",
 					teacherInfo.nickname(), studentInfo.nickname(), status))
