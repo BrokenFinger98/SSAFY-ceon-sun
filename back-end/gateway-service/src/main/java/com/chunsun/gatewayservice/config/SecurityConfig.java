@@ -60,70 +60,70 @@ public class SecurityConfig {
 		http
 			.csrf(csrf -> csrf.disable())
 			.authorizeExchange(exchange -> exchange
-				 .pathMatchers("/admin/**")
-				 .hasRole(Role.ADMIN)
+				//  .pathMatchers("/admin/**")
+				//  .hasRole(Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.POST, "/member-service/students",
-				 	"/member-service/teachers")
-				 .hasRole(Role.GUEST)
+				//  .pathMatchers(HttpMethod.POST, "/member-service/students",
+				//  	"/member-service/teachers")
+				//  .hasRole(Role.GUEST)
 
-				 .pathMatchers(HttpMethod.GET,
-				 	"/member-service/teachers/details/*")
-				 .hasAnyRole(Role.STUDENT, Role.ADMIN)
+				//  .pathMatchers(HttpMethod.GET,
+				//  	"/member-service/teachers/details/*")
+				//  .hasAnyRole(Role.STUDENT, Role.ADMIN)
 
-				 .pathMatchers("/coupon-service/coupons/admin")
-				 .hasAnyRole(Role.ADMIN)
+				//  .pathMatchers("/coupon-service/coupons/admin")
+				//  .hasAnyRole(Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.GET, "/member-service/students/details/*")
-				 .hasAnyRole(Role.TEACHER, Role.ADMIN)
+				//  .pathMatchers(HttpMethod.GET, "/member-service/students/details/*")
+				//  .hasAnyRole(Role.TEACHER, Role.ADMIN)
 
-				 .pathMatchers("/member-service/members/ranking", "/member-service/members/*",
-				 	"/member-service/category/*", "/member-service/category", "/member-service/categories")
-				 .hasAnyRole(Role.ALL)
+				//  .pathMatchers("/member-service/members/ranking", "/member-service/members/*",
+				//  	"/member-service/category/*", "/member-service/category", "/member-service/categories")
+				//  .hasAnyRole(Role.ALL)
 
-				 .pathMatchers(HttpMethod.GET, "/member-service/teachers/class/*")
-				 .hasAnyRole(Role.ALL)
+				//  .pathMatchers(HttpMethod.GET, "/member-service/teachers/class/*")
+				//  .hasAnyRole(Role.ALL)
 
-				 .pathMatchers(HttpMethod.GET, "/member-service/students",
-				 	"/member-service/members/delete/*",
-				 	"/member-service/members/exist/*")
-				 .hasRole(Role.ADMIN)
+				//  .pathMatchers(HttpMethod.GET, "/member-service/students",
+				//  	"/member-service/members/delete/*",
+				//  	"/member-service/members/exist/*")
+				//  .hasRole(Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.GET, "/member-service/members/*/search")
-				 .hasAnyRole(Role.USER)
+				//  .pathMatchers(HttpMethod.GET, "/member-service/members/*/search")
+				//  .hasAnyRole(Role.USER)
 
-				 .pathMatchers("/member-service/s3/*")
-				 .hasRole(Role.ADMIN)
+				//  .pathMatchers("/member-service/s3/*")
+				//  .hasRole(Role.ADMIN)
 
-				 .pathMatchers("/member-service/students/**", "/member-service/like")
-				 .hasAnyRole(Role.STUDENT, Role.ADMIN)
+				//  .pathMatchers("/member-service/students/**", "/member-service/like")
+				//  .hasAnyRole(Role.STUDENT, Role.ADMIN)
 
-				 .pathMatchers("/member-service/teachers/**")
-				 .hasAnyRole(Role.TEACHER, Role.ADMIN)
+				//  .pathMatchers("/member-service/teachers/**")
+				//  .hasAnyRole(Role.TEACHER, Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.POST, "/class-service/class-requests")
-				 .hasAnyRole(Role.STUDENT, Role.ADMIN)
+				//  .pathMatchers(HttpMethod.POST, "/class-service/class-requests")
+				//  .hasAnyRole(Role.STUDENT, Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.POST, "/class-service/class-requests/response", "/class-service/class/status/*")
-				 .hasAnyRole(Role.TEACHER, Role.ADMIN)
+				//  .pathMatchers(HttpMethod.POST, "/class-service/class-requests/response", "/class-service/class/status/*")
+				//  .hasAnyRole(Role.TEACHER, Role.ADMIN)
 
-				 .pathMatchers("/notification-service/coupons/send/all")
-				 .hasAnyRole(Role.ADMIN)
+				//  .pathMatchers("/notification-service/coupons/send/all")
+				//  .hasAnyRole(Role.ADMIN)
 
-				 .pathMatchers(HttpMethod.POST, "/coupon-service/coupons")
-				 .hasAnyRole(Role.STUDENT, Role.ADMIN)
+				//  .pathMatchers(HttpMethod.POST, "/coupon-service/coupons")
+				//  .hasAnyRole(Role.STUDENT, Role.ADMIN)
 
-				 .pathMatchers("/rank-service/**")
-				 .hasRole(Role.ADMIN)
+				//  .pathMatchers("/rank-service/**")
+				//  .hasRole(Role.ADMIN)
 
-				 .pathMatchers("/class-service/**")
-				 .hasAnyRole(Role.USER)
+				//  .pathMatchers("/class-service/**")
+				//  .hasAnyRole(Role.USER)
 
-				 .pathMatchers("/coupon-service/**")
-				 .hasAnyRole(Role.USER)
+				//  .pathMatchers("/coupon-service/**")
+				//  .hasAnyRole(Role.USER)
 
-				 .pathMatchers("/payment-service/**")
-				 .hasAnyRole(Role.STUDENT, Role.ADMIN)
+				//  .pathMatchers("/payment-service/**")
+				//  .hasAnyRole(Role.STUDENT, Role.ADMIN)
 
 				.anyExchange()
 				.permitAll())

@@ -1,5 +1,5 @@
-spring:
-cloud:
-  config:
-    uri: http://config-service:8888
-    name: chat, datasourceInfo, discovery, management, rabbitmq, token, mongo
+# spring:
+# cloud:
+#   config:
+#     uri: http://config-service:8888
+#     name: chat, datasourceInfo, discovery, management, rabbitmq, token, mongo
