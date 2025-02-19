@@ -7,7 +7,7 @@ import static org.springframework.http.HttpStatus.*;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +33,7 @@ public class CouponController {
 		return ResponseEntity.status(OK).body(response);
 	}
 
-	@PatchMapping
+	@PutMapping
 	public ResponseEntity<Void> UpdateCouponStatus(
 		@Valid @RequestBody final UpdateCouponStatusControllerRequest request) {
 		couponService.updateCouponStatus(toUpdateCouponStatusServiceRequest(request));
