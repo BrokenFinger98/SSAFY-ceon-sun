@@ -2,4 +2,4 @@ spring:
   cloud:
     config:
       uri: http://config-service:8888
-      name: class, datasourceInfo, discovery, management, rabbitmq, openvidu
+      name: class, datasourceInfo, discovery, management, rabbitmq

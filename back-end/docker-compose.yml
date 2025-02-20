@@ -338,6 +338,8 @@ services:
     environment:
       spring.cloud.config.username: "${CONFIG_USER}"
       spring.cloud.config.password: "${CONFIG_PASSWORD}"
+      OPENVIDU_SECRET: "${OPENVIDU_SECRET}"
+      OPENVIDU_URL: http://openvidu:4443
     networks:
       - chunsun-network
     depends_on:
