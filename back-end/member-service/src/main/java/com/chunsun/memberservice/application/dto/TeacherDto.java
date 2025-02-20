@@ -10,7 +10,7 @@ public record TeacherDto() {
 	public record CreateCardRequest(
 		String description,
 		String careerDescription,
-		String classProgress,
+		String careerProgress,
 		String classContents,
 		Boolean isWanted,
 		Bank bank,
@@ -25,7 +25,7 @@ public record TeacherDto() {
 	public record UpdateCardRequest(
 		String description,
 		String careerDescription,
-		String classProgress,
+		String careerProgress,
 		String classContents,
 		Boolean isWanted,
 		Bank bank,
@@ -40,7 +40,7 @@ public record TeacherDto() {
 	public record GetCardResponse(
 		String description,
 		String careerDescription,
-		String classProgress,
+		String careerProgress,
 		String classContents,
 		Boolean isWanted,
 		Bank bank,
@@ -59,7 +59,7 @@ public record TeacherDto() {
 		Integer age,
 		String description,
 		String careerDescription,
-		String classProgress,
+		String careerProgress,
 		String classContents,
 		Integer price,
 		Integer totalClassCount,

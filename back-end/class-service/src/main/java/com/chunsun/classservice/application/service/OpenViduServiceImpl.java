@@ -28,7 +28,9 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -56,6 +58,8 @@ public class OpenViduServiceImpl implements OpenViduService {
 		updateJoinTime(contractedClass, role);
 
 		final Session session = getOrCreateSession(contractedClassId);
+		log.info("Session created: {}", session);
+		log.info("token: {}", session.createConnection(getConnectionProperties()).getToken());
 		return session.createConnection(getConnectionProperties());
 	}
 

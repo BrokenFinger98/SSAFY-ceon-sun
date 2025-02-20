@@ -27,7 +27,6 @@ spring:
   cloud:
     aws:
       credentials:
-        #EC2 배포시 IAM role로 변경
         access-key: ${AWS_ACCESS_KEY_ID}
         secret-key: ${AWS_SECRET_ACCESS_KEY}
       region:

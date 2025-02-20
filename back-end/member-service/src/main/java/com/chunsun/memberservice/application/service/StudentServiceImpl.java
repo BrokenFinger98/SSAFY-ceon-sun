@@ -2,6 +2,8 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chunsun.memberservice.application.dto.StudentDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
+import com.chunsun.memberservice.domain.Entity.Category;
 import com.chunsun.memberservice.domain.Entity.Member;
+import com.chunsun.memberservice.domain.Entity.MemberCategory;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 import com.chunsun.memberservice.domain.Enum.Role;
 import com.chunsun.memberservice.domain.Entity.Student;
@@ -62,7 +66,10 @@ public class StudentServiceImpl implements StudentService {
 		Student student = studentRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.STUDENT_NOT_FOUND));
 
-		if(student.getMember().getRole() != Role.STUDENT) {
+		Member member = memberRepository.findById(id).orElseThrow(
+			() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
+
+		if(member.getRole() != Role.STUDENT) {
 			throw new BusinessException(GlobalErrorCodes.NOT_STUDENT);
 		}
 
@@ -70,8 +77,6 @@ public class StudentServiceImpl implements StudentService {
 			request.isExposed(),
 			request.description()
 		);
-
-		studentRepository.save(student);
 
 		return new StudentDto.CardResponse("학생 카드 업데이트 완료");
 	}
@@ -92,11 +97,15 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public StudentDto.GetDetailResponse getDetail(Long id) {
 
-		Member memberInfo = memberRepository.findById(id).orElseThrow(()
+		Member memberInfo = memberRepository.findWithCategoriesById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
 		Student studentInfo = studentRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.STUDENT_NOT_FOUND));
+
+		List<Category> categories = memberInfo.getMemberCategories().stream()
+			.map(MemberCategory::getCategory)
+			.collect(Collectors.toList());
 
 		return new StudentDto.GetDetailResponse(
 			memberInfo.getName(),
@@ -105,7 +114,7 @@ public class StudentServiceImpl implements StudentService {
 			memberInfo.getGender(),
 			Period.between(memberInfo.getBirthdate(), LocalDate.now()).getYears(),
 			studentInfo.getDescription(),
-			categoryService.getUserCategories(id)
+			categories
 		);
 	}
 

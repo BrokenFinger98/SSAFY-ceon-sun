@@ -50,7 +50,7 @@ public class MemberCoupon extends BaseEntity {
 	@Column(name = "expiry_date", nullable = false)
 	private LocalDateTime expiryDate;
 
-	public void changeStatusToExpired() {
-		this.status = CouponStatus.EXPIRED;
+	public void changeStatus(CouponStatus status) {
+		this.status = status;
 	}
 }

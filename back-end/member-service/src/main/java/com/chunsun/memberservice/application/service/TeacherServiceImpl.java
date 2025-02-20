@@ -2,6 +2,8 @@ package com.chunsun.memberservice.application.service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +12,9 @@ import com.chunsun.memberservice.application.dto.TeacherDto;
 import com.chunsun.memberservice.common.error.GlobalErrorCodes;
 import com.chunsun.memberservice.common.exception.BusinessException;
 import com.chunsun.memberservice.config.feign.RankClient;
+import com.chunsun.memberservice.domain.Entity.Category;
 import com.chunsun.memberservice.domain.Entity.Member;
+import com.chunsun.memberservice.domain.Entity.MemberCategory;
 import com.chunsun.memberservice.domain.Repository.MemberRepository;
 import com.chunsun.memberservice.domain.Enum.Role;
 import com.chunsun.memberservice.domain.Entity.Teacher;
@@ -50,7 +54,7 @@ public class TeacherServiceImpl implements TeacherService {
 			member,
 			request.description(),
 			request.careerDescription(),
-			request.classProgress(),
+			request.careerProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
@@ -69,21 +73,23 @@ public class TeacherServiceImpl implements TeacherService {
 		Teacher teacher = teacherRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
 
-		if (teacher.getMember().getRole() != Role.TEACHER) {
+		Member member = memberRepository.findById(id).orElseThrow(
+			() -> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
+
+		if (member.getRole() != Role.TEACHER) {
 			throw new BusinessException(GlobalErrorCodes.NOT_TEACHER);
 		}
 
 		teacher.updateCard(
 			request.description(),
 			request.careerDescription(),
-			request.classProgress(),
+			request.careerProgress(),
 			request.classContents(),
 			request.isWanted(),
 			request.bank(),
 			request.account(),
 			request.price()
 		);
-		teacherRepository.save(teacher);
 
 		return new TeacherDto.UpdateCardResponse("선생 카드 업데이트 완료");
 	}
@@ -97,7 +103,7 @@ public class TeacherServiceImpl implements TeacherService {
 		return new TeacherDto.GetCardResponse(
 			teacher.getDescription(),
 			teacher.getCareerDescription(),
-			teacher.getClassProgress(),
+			teacher.getCareerProgress(),
 			teacher.getClassContents(),
 			teacher.getIsWanted(),
 			teacher.getBank(),
@@ -112,11 +118,15 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public TeacherDto.GetDetailResponse getDetail(Long id) {
 
-		Member memberInfo = memberRepository.findById(id).orElseThrow(()
+		Member memberInfo = memberRepository.findWithCategoriesById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.USER_NOT_FOUND));
 
 		Teacher teacherInfo = teacherRepository.findById(id).orElseThrow(()
 			-> new BusinessException(GlobalErrorCodes.TEACHER_NOT_FOUND));
+
+		List<Category> categories = memberInfo.getMemberCategories().stream()
+			.map(MemberCategory::getCategory)
+			.collect(Collectors.toList());
 
 		rankClient.incrementTeacherViewCount(teacherInfo.getId());
 
@@ -128,12 +138,12 @@ public class TeacherServiceImpl implements TeacherService {
 			Period.between(memberInfo.getBirthdate(), LocalDate.now()).getYears(),
 			teacherInfo.getDescription(),
 			teacherInfo.getCareerDescription(),
-			teacherInfo.getClassProgress(),
+			teacherInfo.getCareerProgress(),
 			teacherInfo.getClassContents(),
 			teacherInfo.getPrice(),
 			teacherInfo.getTotalClassCount(),
 			teacherInfo.getTotalClassHours(),
-			categoryService.getUserCategories(id)
+			categories
 		);
 	}
 
@@ -152,7 +162,6 @@ public class TeacherServiceImpl implements TeacherService {
 		Integer hours = teacher.getTotalClassHours() + request.time();
 
 		teacher.updateClass(count, hours);
-		teacherRepository.save(teacher);
 
 		return new TeacherDto.ClassFinishResponse(count, hours);
 	}

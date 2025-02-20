@@ -1,7 +1,6 @@
 package com.chunsun.memberservice.domain.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +11,9 @@ import feign.Param;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-	Optional<Category> findByNameIgnoreCase(String name);
+	List<Category> findByNameIgnoreCaseIn(List<String> names);
 
 	@Query("select c from MemberCategory mc join mc.category c where mc.member.id = :memberId")
 	List<Category> findCategoriesByMemberId(@Param("memberId") Long memberId);
+
 }
