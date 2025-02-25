@@ -33,4 +33,3 @@ spring:
       type: batch
       poll-timeout: 100
       ack-mode: manual_immediate
-      concurrency: 3
