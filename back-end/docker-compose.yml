@@ -513,7 +513,7 @@ services:
     ports:
       - "9091:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - /home/ubuntu/jenkins-data/workspace/chunSun-BE/back-end/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - chunsun-network
 
