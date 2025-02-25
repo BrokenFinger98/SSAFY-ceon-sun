@@ -4,40 +4,48 @@ global:
 scrape_configs:
   - job_name: 'auth-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/auth-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/auth-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'member-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/member-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/member-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'coupon-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/coupon-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/coupon-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'rank-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/rank-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/rank-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'payment-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/payment-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/payment-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'class-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/class-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/class-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'chat-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/chat-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/chat-service/actuator/prometheus'
+    scheme: http
 
   - job_name: 'notification-service'
     static_configs:
-      - targets: ['gateway-service:8080']
-    metrics_path: '/notification-service/actuator/prometheus'
+      - targets: ['i12a505.p.ssafy.io']
+    metrics_path: '/api/notification-service/actuator/prometheus'
+    scheme: http
