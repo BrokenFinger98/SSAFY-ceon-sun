@@ -3,49 +3,33 @@ global:
 
 scrape_configs:
   - job_name: 'auth-service'
-    metrics_path: '/auth-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/auth-service/actuator/prometheus']
 
   - job_name: 'member-service'
-    metrics_path: '/member-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/member-service/actuator/prometheus']
 
   - job_name: 'coupon-service'
-    metrics_path: '/coupon-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/coupon-service/actuator/prometheus']
 
   - job_name: 'rank-service'
-    metrics_path: '/rank-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/rank-service/actuator/prometheus']
 
   - job_name: 'payment-service'
-    metrics_path: '/payment-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/payment-service/actuator/prometheus']
 
   - job_name: 'class-service'
-    metrics_path: '/class-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/class-service/actuator/prometheus']
 
   - job_name: 'chat-service'
-    metrics_path: '/chat-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/chat-service/actuator/prometheus']
 
   - job_name: 'notification-service'
-    metrics_path: '/notification-service/actuator/prometheus'
     static_configs:
-      - targets:
-          - 'gateway-service:8080'
+      - targets: ['gateway-service:8080/notification-service/actuator/prometheus']
