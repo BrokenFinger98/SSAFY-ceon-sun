@@ -24,3 +24,13 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer  # ✅ JSON 직렬화
       properties:
         spring.json.add.type.headers: false  # ✅ JSON 타입 헤더 추가 비활성화
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

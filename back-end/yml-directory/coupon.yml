@@ -34,3 +34,13 @@ spring:
         compression.type: lz4
         enable.idempotence: true
         transactional.id: "coupon-tx-producer"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

@@ -39,3 +39,13 @@ spring:
 
 snowflake:
   machine-id: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
