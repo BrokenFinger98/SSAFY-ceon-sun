@@ -77,3 +77,13 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/notification-service/(?<segment>/.*)?, /$\{segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
