@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chunsun.couponkafkaservice.application.dto.BulkInsertCouponDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Transactional
 @Repository
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class JdbcRepository {
 
 	public void bulkInsert(final List<BulkInsertCouponDto> coupons) {
 		final String sql = "INSERT INTO member_coupon (coupon_id, member_id, status, expiry_date) VALUES (?, ?, ?, ?)";
-
+		log.info("coupons.size(): {}", coupons.size());
 		jdbcTemplate.batchUpdate(sql,
 			new BatchPreparedStatementSetter() {
 				@Override
@@ -49,6 +51,7 @@ public class JdbcRepository {
 	}
 
 	public void updateRemainingQuantities(final List<BulkInsertCouponDto> bulkCoupons) {
+		log.info("coupons.size(): {}", bulkCoupons.size());
 		final Map<Long, Long> issuedCountByCouponId = bulkCoupons.stream()
 			.collect(Collectors.groupingBy(BulkInsertCouponDto::couponId, Collectors.counting()));
 

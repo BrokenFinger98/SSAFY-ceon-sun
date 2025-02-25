@@ -28,9 +28,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
-        linger.ms: 10
+        linger.ms: 100
         batch.size: 65536
         buffer.memory: 33554432
         compression.type: lz4
         enable.idempotence: true
-        transactional.id: "coupon-tx-producer"
+        transactional.id: "coupon-tx-producer-${spring.application.instance-id}"
