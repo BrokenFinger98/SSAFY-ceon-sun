@@ -33,11 +33,12 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 
 	private static final String[] PUBLIC_PATHS = {
-		"/",
-		"favicon.ico",
-		"/auth-service/**",
-		"/discovery-service/**",
-		"/actuator/prometheus"    // ✅ Prometheus 접근 허용
+		"/**"
+		// "/",
+		// "favicon.ico",
+		// "/auth-service/**",
+		// "/discovery-service/**",
+		// "/actuator/prometheus"    // ✅ Prometheus 접근 허용
 	};
 
 
