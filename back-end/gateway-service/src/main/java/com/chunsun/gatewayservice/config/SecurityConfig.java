@@ -33,8 +33,13 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 
 	private static final String[] PUBLIC_PATHS = {
-		"/", "favicon.ico", "/auth-service/**", "/discovery-service/**"
+		"/",
+		"favicon.ico",
+		"/auth-service/**",
+		"/discovery-service/**",
+		"/actuator/prometheus"    // ✅ Prometheus 접근 허용
 	};
+
 
 	/*
 	 * 인증이 필요없는 요청 필터
