@@ -3,14 +3,9 @@ global:
 
 scrape_configs:
   - job_name: 'spring-boot-services'
-    metrics_path: '/actuator/prometheus'
+    metrics_path: '/{service}/actuator/prometheus'  # 이 부분 수정
+    params:
+      service: [auth-service, member-service, coupon-service, rank-service, payment-service, class-service, chat-service, notification-service]
     static_configs:
       - targets:
-          - 'gateway-service:8080/auth-service'
-          - 'gateway-service:8080/member-service'
-          - 'gateway-service:8080/coupon-service'
-          - 'gateway-service:8080/rank-service'
-          - 'gateway-service:8080/payment-service'
-          - 'gateway-service:8080/class-service'
-          - 'gateway-service:8080/chat-service'
-          - 'gateway-service:8080/notification-service'
+          - 'gateway-service:8080'  # 경로 제거하고 서비스만 남김
