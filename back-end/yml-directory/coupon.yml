@@ -29,7 +29,7 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
         linger.ms: 100
-        batch.size: 65536
+        batch.size: 524288
         buffer.memory: 33554432
         compression.type: lz4
         enable.idempotence: true
