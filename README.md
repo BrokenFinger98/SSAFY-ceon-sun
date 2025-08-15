@@ -8,53 +8,67 @@
 - 개발 수업 진행을 원하는 학생들은 과외 선생님에게 1:1 채팅을 통해 과외 문의를 진행하고 수업 신청을 할 수 있습니다.
 - 온라인 공유 코드 에디터를 이용해 코딩 수업을 진행 할 수 있습니다.
 
----
 ## 화면
 
 #### 메인
 <img src="./images/main.png"/>
 
+---
+
 #### 로그인
 <img src="./images/login.png"/>
+
+---
 
 #### 학생 소개글
 <img src="./images/student-description.png"/>
 
+---
+
 #### 선생 소개글
 <img src="./images/teacher-description.png"/>
+
+---
 
 #### 강의 소개글
 <img src="./images/lecture-description.png"/>
 
+---
+
 #### 채팅
 <img src="./images/chatting.png"/>
+
+---
 
 #### 수강 정보
 <img src="./images/class.png"/>
 
+---
+
 #### 알림
 <img src="./images/notification.png"/>
+
+---
 
 #### 쿠폰 알림
 <img src="./images/coupon-notification.png"/>
 
+---
+
 #### 결제
 <img src="./images/payment.png"/>
+
+---
 
 #### 랭킹
 <img src="./images/rank.png"/>
 
----
-
 ## 아키텍처
 <img src="./images/architecture.png"/>
-
----
 
 ## ERD
 <img src="./images/erd.png"/>
 
----
 ## 기술 스택
 
 #### Back-End
@@ -174,8 +188,6 @@
   </tr>
 </table>
 
----
-
 ## 주요 개발 기능 (담당)
 
 ### Spring Cloud 기반 MSA: 기술 스택 정리
@@ -250,6 +262,7 @@
 3. **Config Server**는 **대칭키**로 yml 설정 파일을 암호화/복호화 관리하며, Spring Security를 이용해 **admin** 계정만 접근 가능  
 4. **GitLab** 저장소에서 설정 파일을 읽어오고, **Spring Cloud Bus(AMQP)**를 통해 무중단으로 설정 변경 사항을 **실시간 반영**  
 5. **Actuator**로 **health check**와 **bus-refresh**를 관리, **OpenFeign**을 통해 **서버 간 통신** 로직을 간소화
+
 ---
 
 ### 쿠폰: Redis & Kafka를 활용한 선착순 쿠폰 이벤트
@@ -355,8 +368,6 @@ export default function () {
 - **Redis**와 **Kafka**를 도입해 **선착순 쿠폰** 이벤트 발급 시 발생하는 동시 요청을 **안정적으로 처리**할 수 있었음
 - **Batch** 방식과 **Bulk Insert, Bulk Update**를 통해 DB 트래픽을 획기적으로 줄여 **성능** 향상  
 - **중복 발급 방지**와 **재고 수량 관리**를 Redis에서 책임지면서, **데이터 무결성**을 실시간 보장
-
----
 
 ## 팀원
 
