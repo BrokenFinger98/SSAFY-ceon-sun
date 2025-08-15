@@ -95,12 +95,12 @@
       <img src="https://spring.io/img/projects/spring-cloud.svg" width="48" height="48" alt="Spring Cloud"/><br/>
       <sub><b>Spring Cloud</b></sub>
     </td>
+  </tr>
+  <tr>
     <td align="center" width="110" style="border: none;">
       <img src="https://spring.io/img/projects/spring-security.svg" width="48" height="48" alt="Spring Security"/><br/>
       <sub><b>Spring Security</b></sub>
     </td>
-  </tr>
-  <tr>
     <td align="center" width="110" style="border: none;">
       <img src="https://cdn.inflearn.com/public/files/courses/328989/c1b5cabc-03f0-4cd8-9f98-8ec0e2f42378/329248-4.png" width="48" height="48" alt="QueryDSL"/><br/>
       <sub><b>QueryDSL</b></sub></td>
