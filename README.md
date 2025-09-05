@@ -1,7 +1,7 @@
 <p align="middle" >
   <img width="200px;" src="./images/logo.png"/>
 </p>
-<p align="middle">'개발자 과외는 천선'의 줄임말로 개발자와 학생을 매칭해주는 코딩 과외 플랫폼입니다.</p>
+<p align="middle"><strong>'개발자 과외는 천선'의 줄임말로 개발자와 학생을 매칭해주는 코딩 과외 플랫폼입니다.</strong></p>
 
 ## 프로젝트 소개
 - 개발 수업 진행을 원하는 선생님들은 과외 수업을 등록할 수 있습니다.
