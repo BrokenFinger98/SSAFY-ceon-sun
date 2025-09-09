@@ -115,6 +115,12 @@
       <sub><b>Kafka</b></sub>
     </td>
   </tr>
+  <tr>
+    <td align="center" width="110" style="border: none;">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rabbitmq/rabbitmq-original.svg" width="48" height="48" alt="Apache Kafka"/><br/>
+      <sub><b>RabbitMQ</b></sub>
+    </td>
+  </tr>
 </table>
 
 #### Front-End
